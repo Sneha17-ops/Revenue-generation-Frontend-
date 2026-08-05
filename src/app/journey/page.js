@@ -72,7 +72,7 @@ export default function OurLegacyPage() {
     {
       id: 'gallery-6',
       title: 'Generations of Sweet Memories',
-      subtitle: 'Bringing smiles to families since 1974',
+      subtitle: 'Bringing smiles to families since 1995',
       url: '/assets/MP4.jpeg',
       category: 'Happy Families'
     }
@@ -148,7 +148,7 @@ export default function OurLegacyPage() {
           <div className="absolute top-6 left-6 z-10">
             <div className="inline-flex items-center space-x-2 bg-[#0B3D2E]/90 backdrop-blur-md text-[#D4AF37] px-4 py-2 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
               <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              <span>35 Years of Legacy</span>
+              <span>Legacy Since 1995</span>
             </div>
           </div>
 
@@ -158,7 +158,7 @@ export default function OurLegacyPage() {
                 FAMILY • TRADITION • HERITAGE • TRUST
               </span>
               <h1 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-md">
-                Crafting Authentic Bihari Sweets Since 1974.
+                Crafting Authentic Bihari Sweets Since 1995.
               </h1>
             </div>
 
@@ -470,8 +470,8 @@ export default function OurLegacyPage() {
         <div className="bg-[#0B3D2E] text-[#FAF7F2] p-8 rounded-[24px] border border-[#D4AF37]/40 shadow-2xl grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
           <div className="space-y-1">
             <Award className="w-6 h-6 text-[#D4AF37] mx-auto" />
-            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">35+ Years Legacy</h4>
-            <p className="text-[11px] text-[#FAF7F2]/75">Established in 1974</p>
+            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">30+ Years Legacy</h4>
+            <p className="text-[11px] text-[#FAF7F2]/75">Established in 1995</p>
           </div>
 
           <div className="space-y-1">

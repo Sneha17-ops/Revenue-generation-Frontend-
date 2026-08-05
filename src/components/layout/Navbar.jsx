@@ -125,7 +125,7 @@ export const Navbar = ({ onOpenSearch }) => {
                   VINDHYAWASINI TILKUT BHANDAR
                 </span>
                 <span className="text-[9px] tracking-[0.25em] text-[#D4AF37] uppercase font-semibold">
-                  Authentic Gaya Sweets • Est. 1974
+                  Authentic Gaya Sweets • Est. 1995
                 </span>
               </div>
             </Link>

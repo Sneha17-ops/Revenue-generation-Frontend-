@@ -22,7 +22,7 @@ export const HeritageStory = () => {
             </span>
 
             <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-royal-ivory leading-tight">
-              Preserving the <span className="gold-text-gradient font-cinzel">Heritage of Bihar</span> Since 1974
+              Preserving the <span className="gold-text-gradient font-cinzel">Heritage of Bihar</span> Since 1995
             </h2>
 
             <p className="text-royal-goldMuted/80 text-sm leading-relaxed font-light">
