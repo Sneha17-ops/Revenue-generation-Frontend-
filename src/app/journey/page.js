@@ -141,34 +141,36 @@ export default function OurLegacyPage() {
             <img src="/assets/MP6.jpeg" alt="VINDHYAWASINI TILKUT BHANDAR Heritage" className="w-full h-full object-cover" />
           </video>
 
-          {/* Subtle 15–20% Dark Luxury Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/80 via-[#06241B]/20 to-transparent pointer-events-none" />
+          {/* Subtle 25% Dark Luxury Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/90 via-[#06241B]/20 to-transparent pointer-events-none" />
 
-          {/* Floating Heritage Accents & Trust Badge Overlay */}
+          {/* Floating Top Badge Overlay */}
           <div className="absolute top-6 left-6 z-10">
-            <div className="inline-flex items-center space-x-2 bg-[#0B3D2E]/90 backdrop-blur-md text-[#D4AF37] px-4 py-2 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
-              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+            <div className="inline-flex items-center space-x-2 bg-[#0B3D2E]/80 backdrop-blur-md text-[#D4AF37] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span>Legacy Since 1995</span>
             </div>
           </div>
 
-          <div className="absolute bottom-8 left-6 right-6 sm:left-10 sm:right-10 z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="space-y-2 max-w-2xl text-[#FAF7F2]">
-              <span className="text-xs uppercase tracking-[0.3em] font-semibold text-[#F3E5AB]">
+          {/* Bottom Glassmorphism Banner Overlay to ensure text doesn't obscure video visual action */}
+          <div className="absolute bottom-6 left-6 right-6 sm:left-8 sm:right-8 z-10 bg-[#06241B]/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-[#D4AF37]/35 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1 max-w-2xl text-[#FAF7F2]">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F3E5AB] block">
                 FAMILY • TRADITION • HERITAGE • TRUST
               </span>
-              <h1 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-md">
-                Crafting Authentic Bihari Sweets Since 1995.
+              <h1 className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
+                Crafting Authentic Bihari Sweets Since 1995
               </h1>
             </div>
 
-            {/* Floating Video Control Button */}
+            {/* Video Play/Pause Control Button */}
             <button
               onClick={togglePlay}
-              className="self-start md:self-auto p-3.5 bg-[#0B3D2E]/90 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-full border border-[#D4AF37]/40 backdrop-blur-md transition-all shadow-2xl shrink-0"
+              className="self-start md:self-auto px-4 py-2 bg-[#0B3D2E] hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-xl border border-[#D4AF37]/40 transition-all text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shrink-0 shadow-lg"
               title={isPlaying ? "Pause Video" : "Play Video"}
             >
-              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              <span>{isPlaying ? "Pause" : "Play"}</span>
             </button>
           </div>
         </motion.div>
