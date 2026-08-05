@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
+  ChevronDown,
   Sparkles, 
   ChevronLeft, 
   ChevronRight, 
@@ -27,19 +28,26 @@ import {
 
 export default function OurLegacyPage() {
   const videoRef = useRef(null);
+  const aboutRef = useRef(null);
   const galleryRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [showTextBanner, setShowTextBanner] = useState(true);
+  const [showHeroCard, setShowHeroCard] = useState(false);
 
-  // Automatically fade out the video text banner after 2.5 seconds
+  // Trigger information card animation and scroll indicator after 8 seconds of video playback
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowTextBanner(false);
-    }, 2500);
+      setShowHeroCard(true);
+    }, 8000);
     return () => clearTimeout(timer);
   }, []);
+
+  const scrollToAbout = () => {
+    if (aboutRef.current) {
+      aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   // Gallery items using local high-res assets
   const galleryItems = [
@@ -129,12 +137,11 @@ export default function OurLegacyPage() {
       {/* ========================================================================= */}
       {/* SECTION 1 – HERO VIDEO BANNER                                             */}
       {/* ========================================================================= */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-12 max-w-7xl mx-auto">
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-6 max-w-7xl mx-auto flex flex-col items-center">
         <motion.div 
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          onMouseEnter={() => setShowTextBanner(true)}
           className="relative w-full h-[65vh] sm:h-[75vh] lg:h-[82vh] rounded-[20px] overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 group"
         >
           {/* Autoplay Cinematic Heritage Video */}
@@ -144,15 +151,16 @@ export default function OurLegacyPage() {
             loop
             muted
             playsInline
+            onEnded={() => setShowHeroCard(true)}
             poster="/assets/MP6.jpeg"
-            className="w-full h-full object-cover filter brightness-[0.92] contrast-[1.05]"
+            className="w-full h-full object-cover filter brightness-[0.95] contrast-[1.05]"
           >
             <source src="/assets/MP7.mp4" type="video/mp4" />
             <img src="/assets/MP6.jpeg" alt="VINDHYAWASINI TILKUT BHANDAR Heritage" className="w-full h-full object-cover" />
           </video>
 
-          {/* Subtle 25% Dark Luxury Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/90 via-[#06241B]/20 to-transparent pointer-events-none" />
+          {/* Subtle Dark Luxury Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/70 via-transparent to-transparent pointer-events-none" />
 
           {/* Floating Top Badge Overlay */}
           <div className="absolute top-6 left-6 z-10">
@@ -162,44 +170,66 @@ export default function OurLegacyPage() {
             </div>
           </div>
 
-          {/* Bottom Glassmorphism Banner Overlay: Appears for 2.5s and smoothly fades out */}
+          {/* Small Circular Play/Pause Icon Button (Bottom-Right Corner) */}
+          <button
+            onClick={togglePlay}
+            className="absolute bottom-5 right-5 sm:bottom-6 sm:right-6 z-20 w-10 h-10 rounded-full bg-[#06241B]/80 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#06241B] border border-[#D4AF37]/40 backdrop-blur-md flex items-center justify-center transition-all shadow-lg hover:scale-110"
+            title={isPlaying ? "Pause Video" : "Play Video"}
+          >
+            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-[#D4AF37] translate-x-0.5" />}
+          </button>
+
+          {/* Premium Animated Information Card (Option 1) */}
           <AnimatePresence>
-            {showTextBanner && (
+            {showHeroCard && (
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute bottom-6 left-6 right-6 sm:left-8 sm:right-8 z-10 bg-[#06241B]/85 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-[#D4AF37]/35 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 pointer-events-auto"
+                exit={{ opacity: 0, y: 40 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute bottom-5 left-5 right-16 sm:bottom-6 sm:left-6 sm:right-20 z-10 bg-[#06241B]/75 backdrop-blur-xl p-4 sm:p-5 rounded-[20px] border border-[#D4AF37]/35 shadow-2xl max-w-xl pointer-events-auto"
               >
-                <div className="space-y-1 max-w-2xl text-[#FAF7F2]">
+                <div className="space-y-1 text-[#FAF7F2]">
                   <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F3E5AB] block">
-                    FAMILY • TRADITION • HERITAGE • TRUST
+                    Family • Tradition • Heritage • Trust
                   </span>
-                  <h1 className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
+                  <h1 className="font-heading text-lg sm:text-2xl lg:text-3xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
                     Crafting Authentic Bihari Sweets Since 1995
                   </h1>
                 </div>
-
-                {/* Video Play/Pause Control Button */}
-                <button
-                  onClick={togglePlay}
-                  className="self-start md:self-auto px-4 py-2 bg-[#0B3D2E] hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-xl border border-[#D4AF37]/40 transition-all text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shrink-0 shadow-lg"
-                  title={isPlaying ? "Pause Video" : "Play Video"}
-                >
-                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  <span>{isPlaying ? "Pause" : "Play"}</span>
-                </button>
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Scroll Indicator: Displays gently after the video ends / card appears */}
+        <AnimatePresence>
+          {showHeroCard && (
+            <motion.button
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              onClick={scrollToAbout}
+              className="mt-6 flex flex-col items-center text-[#D4AF37] hover:text-[#0B3D2E] transition-colors group cursor-pointer"
+            >
+              <span className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-1">
+                Scroll to Discover Our Story
+              </span>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ChevronDown className="w-5 h-5 text-[#D4AF37] group-hover:text-[#0B3D2E] transition-colors" />
+              </motion.div>
+            </motion.button>
+          )}
+        </AnimatePresence>
       </section>
 
       {/* ========================================================================= */}
       {/* SECTION 2 – LOGO REVEAL & ABOUT SECTION                                   */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section ref={aboutRef} className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Animated Logo Emblem with Floating Animation & Soft Golden Glow */}
