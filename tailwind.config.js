@@ -25,8 +25,10 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['Playfair Display', 'Cinzel', 'Georgia', 'serif'],
-        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        heading: ['Oswald', 'sans-serif'],
+        serif: ['Oswald', 'sans-serif'],
+        cinzel: ['Oswald', 'sans-serif'],
+        sans: ['Montserrat', 'sans-serif'],
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #997D20 100%)',
