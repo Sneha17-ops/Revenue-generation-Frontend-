@@ -83,9 +83,9 @@ export const Footer = () => {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
-              <img src="/logo.svg" alt="Bindhyawasini" className="w-10 h-10" />
+              <img src="/logo.svg" alt="VINDHYAWASINI TILKUT BHANDAR" className="w-12 h-12 object-contain filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" />
               <div>
-                <h4 className="font-cinzel text-xl font-bold tracking-wider text-royal-gold">BINDHYAWASINI</h4>
+                <h4 className="font-cinzel text-lg font-bold tracking-wider text-royal-gold">VINDHYAWASINI TILKUT BHANDAR</h4>
                 <p className="text-[10px] tracking-[0.25em] text-royal-goldMuted uppercase">Traditional Bihari Sweets</p>
               </div>
             </div>
@@ -158,7 +158,7 @@ export const Footer = () => {
             </span>
           </div>
 
-          <p>© {new Date().getFullYear()} Bindhyawasini Traditional Sweets. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} VINDHYAWASINI TILKUT BHANDAR. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

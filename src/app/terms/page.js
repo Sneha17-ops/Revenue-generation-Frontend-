@@ -10,10 +10,10 @@ export default function TermsPage() {
         
         <div className="space-y-4 text-xs text-royal-goldMuted/80 leading-relaxed">
           <p>
-            By using the Bindhyawasini website, you agree to our store policies regarding city-limits express delivery, pricing, and authentic preparation standards.
+            By using the VINDHYAWASINI TILKUT BHANDAR website, you agree to our store policies regarding city-limits express delivery, pricing, and authentic preparation standards.
           </p>
           <p>
-            All content, trademarks, and traditional recipe branding are property of Bindhyawasini Luxury Confectionery.
+            All content, trademarks, and traditional recipe branding are property of VINDHYAWASINI TILKUT BHANDAR.
           </p>
         </div>
       </div>

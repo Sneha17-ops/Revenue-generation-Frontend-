@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
   Sparkles, 
@@ -15,28 +16,87 @@ import {
   Heart,
   ShieldCheck,
   Award,
-  Sliders
+  Star,
+  Quote,
+  ArrowRight,
+  Clock,
+  MapPin,
+  Users,
+  CheckCircle2
 } from 'lucide-react';
-import { useJourneyGalleryStore } from '../../store/useJourneyGalleryStore';
 
 export default function OurLegacyPage() {
-  const { photos } = useJourneyGalleryStore();
-  const activePhotos = photos.filter((p) => p.enabled);
-  const coverPhoto = photos.find((p) => p.isCover) || activePhotos[0] || photos[0];
-
-  // Video State
-  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef(null);
-
-  // Lightbox State
+  const galleryRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  // Before & After Interactive Slider State (0 to 100)
-  const [sliderPosition, setSliderPosition] = useState(50);
-  const isDraggingRef = useRef(false);
+  // Gallery items using local high-res assets
+  const galleryItems = [
+    {
+      id: 'gallery-1',
+      title: 'Traditional Tilkut Hand-Pounding',
+      subtitle: 'Karigars pounding white sesame in wooden mortars',
+      url: '/assets/MP6.jpeg',
+      category: 'Master Craftsmen'
+    },
+    {
+      id: 'gallery-2',
+      title: 'Royal Brand Heritage Emblem',
+      subtitle: '35 Years of trusted confectionery excellence',
+      url: '/assets/MP8.jpeg',
+      category: 'Brand Heritage'
+    },
+    {
+      id: 'gallery-3',
+      title: 'Authentic Gaya Gud Tilkut',
+      subtitle: 'Crisp sesame slabs prepared with organic jaggery',
+      url: '/assets/Mp1.jpeg',
+      category: 'Traditional Tilkut'
+    },
+    {
+      id: 'gallery-4',
+      title: 'Golden Sweet Hampers & Tokris',
+      subtitle: 'Festive packaging for Bihar wedding celebrations',
+      url: '/assets/MP2.jpeg',
+      category: 'Festive Celebrations'
+    },
+    {
+      id: 'gallery-5',
+      title: 'Flaky 64-Layer Silao Khaja',
+      subtitle: 'Pure A2 cow ghee sweet perfection',
+      url: '/assets/MP3.jpeg',
+      category: 'Premium Sweets'
+    },
+    {
+      id: 'gallery-6',
+      title: 'Generations of Sweet Memories',
+      subtitle: 'Bringing smiles to families since 1974',
+      url: '/assets/MP4.jpeg',
+      category: 'Happy Families'
+    }
+  ];
 
-  // Toggle Video Playback
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (lightboxIndex === null) return;
+      if (e.key === 'Escape') {
+        setLightboxIndex(null);
+        setIsZoomed(false);
+      } else if (e.key === 'ArrowRight') {
+        setLightboxIndex((prev) => (prev + 1) % galleryItems.length);
+        setIsZoomed(false);
+      } else if (e.key === 'ArrowLeft') {
+        setLightboxIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
+        setIsZoomed(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, galleryItems.length]);
+
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -48,303 +108,226 @@ export default function OurLegacyPage() {
     }
   };
 
-  // Keyboard navigation for Lightbox
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (lightboxIndex === null) return;
-
-      if (e.key === 'Escape') {
-        setLightboxIndex(null);
-        setIsZoomed(false);
-      } else if (e.key === 'ArrowRight') {
-        setLightboxIndex((prev) => (prev + 1) % activePhotos.length);
-        setIsZoomed(false);
-      } else if (e.key === 'ArrowLeft') {
-        setLightboxIndex((prev) => (prev - 1 + activePhotos.length) % activePhotos.length);
-        setIsZoomed(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex, activePhotos.length]);
+  const scrollToGallery = () => {
+    if (galleryRef.current) {
+      galleryRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#1C2B26] overflow-x-hidden selection:bg-[#B8860B] selection:text-white font-sans">
+    <div className="min-h-screen bg-[#FAF7F2] text-[#0B3D2E] overflow-x-hidden font-sans selection:bg-[#D4AF37] selection:text-[#0B3D2E]">
       
-      {/* ---------------------------------------------------- */}
-      {/* 1. FULL-SCREEN HERO CINEMATIC VIDEO SECTION           */}
-      {/* ---------------------------------------------------- */}
-      <section className="relative min-h-[92vh] flex flex-col justify-center items-center py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#0B2519]">
-        
-        {/* Video / Ambient Cinematic Canvas */}
-        <div className="absolute inset-0 z-0">
+      {/* ========================================================================= */}
+      {/* SECTION 1 – HERO VIDEO BANNER                                             */}
+      {/* ========================================================================= */}
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-12 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full h-[65vh] sm:h-[75vh] lg:h-[82vh] rounded-[20px] overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 group"
+        >
+          {/* Autoplay Cinematic Heritage Video */}
           <video
             ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
-            poster="/assets/Mp1.jpeg"
-            className="w-full h-full object-cover opacity-40 filter brightness-90 saturate-110 scale-105"
+            poster="/assets/MP6.jpeg"
+            className="w-full h-full object-cover filter brightness-[0.92] contrast-[1.05]"
           >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-preparing-dough-for-baking-41138-large.mp4" type="video/mp4" />
-            <img src="/assets/Mp1.jpeg" alt="Cinematic Legacy" className="w-full h-full object-cover" />
+            <source src="/assets/MP7.mp4" type="video/mp4" />
+            <img src="/assets/MP6.jpeg" alt="VINDHYAWASINI TILKUT BHANDAR Heritage" className="w-full h-full object-cover" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B2519] via-[#0B2519]/50 to-[#0B2519]/80" />
-        </div>
 
-        {/* Ambient Warm Glow */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[750px] h-[750px] bg-[#D4AF37]/15 rounded-full blur-[220px] pointer-events-none z-0" />
+          {/* Subtle 15–20% Dark Luxury Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/80 via-[#06241B]/20 to-transparent pointer-events-none" />
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.35em] text-[#D4AF37] font-bold bg-[#D4AF37]/10 px-5 py-2 rounded-full border border-[#D4AF37]/30 backdrop-blur-md shadow-gold-glow"
-          >
-            <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-            <span>OUR LEGACY</span>
-          </motion.div>
+          {/* Floating Heritage Accents & Trust Badge Overlay */}
+          <div className="absolute top-6 left-6 z-10">
+            <div className="inline-flex items-center space-x-2 bg-[#0B3D2E]/90 backdrop-blur-md text-[#D4AF37] px-4 py-2 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              <span>35 Years of Legacy</span>
+            </div>
+          </div>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2 }}
-            className="font-serif-luxury text-4xl sm:text-6xl lg:text-7xl font-bold leading-tight text-[#FDFBF7] tracking-tight"
-          >
-            Our Journey Through the Years
-          </motion.h1>
+          <div className="absolute bottom-8 left-6 right-6 sm:left-10 sm:right-10 z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="space-y-2 max-w-2xl text-[#FAF7F2]">
+              <span className="text-xs uppercase tracking-[0.3em] font-semibold text-[#F3E5AB]">
+                FAMILY • TRADITION • HERITAGE • TRUST
+              </span>
+              <h1 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-md">
+                Crafting Authentic Bihari Sweets Since 1974.
+              </h1>
+            </div>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.4 }}
-            className="text-[#D4AF37] text-xl sm:text-3xl font-serif-luxury italic max-w-2xl mx-auto tracking-wide font-light"
-          >
-            Every picture tells a story.
-          </motion.p>
-        </div>
-
-        {/* Video Play/Pause Control Button */}
-        <div className="absolute bottom-8 right-8 z-20">
-          <button
-            onClick={togglePlay}
-            className="p-3 bg-[#0B2519]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/30 hover:border-[#D4AF37] hover:bg-[#0B2519] backdrop-blur-md transition-all shadow-xl"
-            title={isPlaying ? "Pause Hero Video" : "Play Hero Video"}
-          >
-            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-          </button>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------- */}
-      {/* 2. ELEGANT MISSION SECTION (ANIMATED FAMILY QUOTE)   */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8 bg-[#FAF7F2]">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9 }}
-          className="space-y-6 bg-[#F5F0E6] p-12 sm:p-16 rounded-3xl border border-[#D4AF37]/25 shadow-xl relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-[100px] pointer-events-none" />
-
-          <span className="text-[11px] uppercase tracking-[0.3em] font-bold text-[#B8860B] bg-[#B8860B]/10 px-4 py-1.5 rounded-full border border-[#B8860B]/20">
-            OUR MISSION
-          </span>
-
-          <blockquote className="font-serif-luxury text-2xl sm:text-4xl text-[#1C2B26] leading-relaxed font-medium italic">
-            "Our mission is to bring families together around authentic recipes, crafted with pure devotion and timeless warmth."
-          </blockquote>
-
-          <div className="pt-2 flex justify-center items-center space-x-3 text-xs font-semibold text-[#8B6508] uppercase tracking-widest">
-            <Heart className="w-4 h-4 text-[#B8860B] fill-current" />
-            <span>Preserving Family Sweets Heritage</span>
+            {/* Floating Video Control Button */}
+            <button
+              onClick={togglePlay}
+              className="self-start md:self-auto p-3.5 bg-[#0B3D2E]/90 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-full border border-[#D4AF37]/40 backdrop-blur-md transition-all shadow-2xl shrink-0"
+              title={isPlaying ? "Pause Video" : "Play Video"}
+            >
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+            </button>
           </div>
         </motion.div>
       </section>
 
-      {/* ---------------------------------------------------- */}
-      {/* 3. ANIMATED PHOTO WALL JOURNEY SECTION                */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-24 sm:py-32 max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 space-y-36">
-        <div className="text-center space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#B8860B] font-bold bg-[#B8860B]/10 px-4 py-1.5 rounded-full border border-[#B8860B]/20">
-            PHOTO WALL JOURNEY
-          </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#1C2B26]">
-            Moments in Time
-          </h2>
-          <p className="text-xs sm:text-sm text-[#4A5D55] max-w-lg mx-auto">
-            Smooth vertical parallax reveal showcasing our authentic confectionery journey.
-          </p>
-        </div>
-
-        <div className="space-y-36">
-          {activePhotos.map((photo, index) => (
-            <AnimatedPhotoWallCard
-              key={photo.id}
-              photo={photo}
-              index={index}
-              onOpenLightbox={() => setLightboxIndex(index)}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------- */}
-      {/* 4. INTERACTIVE BEFORE & AFTER COMPARISON SLIDER      */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-28 bg-[#F3EDE2] border-y border-[#D4AF37]/20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* ========================================================================= */}
+      {/* SECTION 2 – LOGO REVEAL & ABOUT SECTION                                   */}
+      {/* ========================================================================= */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          <div className="text-center space-y-3">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#B8860B] font-bold bg-[#B8860B]/10 px-4 py-1.5 rounded-full border border-[#B8860B]/20">
-              TRADITION IN ACTION
-            </span>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#1C2B26]">
-              Before & After Transformation
-            </h2>
-            <p className="text-xs sm:text-sm text-[#4A5D55] max-w-md mx-auto">
-              Drag the slider to compare raw ingredients in copper mortars with our finished sweet creations.
-            </p>
-          </div>
-
-          {/* Slider Canvas Container */}
-          <div 
-            className="relative w-full h-[55vh] sm:h-[65vh] rounded-3xl overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 select-none cursor-ew-resize"
-            onMouseMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-              setSliderPosition((x / rect.width) * 100);
-            }}
-            onTouchMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const touch = e.touches[0];
-              const x = Math.max(0, Math.min(touch.clientX - rect.left, rect.width));
-              setSliderPosition((x / rect.width) * 100);
-            }}
+          {/* Left Column: Animated Logo Emblem with Floating Animation & Soft Golden Glow */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 flex justify-center"
           >
-            {/* After Image (Full background) */}
-            <img 
-              src="/assets/MP2.jpeg" 
-              alt="Handcrafted Sweet Artwork" 
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <span className="absolute bottom-6 right-8 bg-[#0B2519]/80 backdrop-blur-md text-[#D4AF37] px-4 py-2 rounded-xl text-xs font-mono font-bold border border-[#D4AF37]/30">
-              AFTER: Golden Bihari Sweet Artwork
-            </span>
+            <div className="relative">
+              {/* Radial Golden Background Glow */}
+              <div className="absolute inset-0 bg-[#D4AF37]/25 rounded-3xl blur-[70px] pointer-events-none" />
 
-            {/* Before Image (Clipped overlay) */}
-            <div 
-              className="absolute inset-0 overflow-hidden"
-              style={{ width: `${sliderPosition}%` }}
-            >
-              <img 
-                src="/assets/Mp1.jpeg" 
-                alt="Raw Mortar Preparation" 
-                className="absolute inset-0 w-full h-full object-cover max-w-none"
-                style={{ width: '100%', height: '100%' }}
-              />
-              <span className="absolute bottom-6 left-8 bg-[#0B2519]/80 backdrop-blur-md text-[#D4AF37] px-4 py-2 rounded-xl text-xs font-mono font-bold border border-[#D4AF37]/30">
-                BEFORE: Pure Sesame & Brass Vessel Mortars
+              {/* Floating Uncropped Container Frame */}
+              <motion.div 
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
+                className="relative w-72 sm:w-96 p-4 rounded-[28px] bg-gradient-to-tr from-[#06241B] via-[#0B3D2E] to-[#135440] border-2 border-[#D4AF37] shadow-[0_0_40px_rgba(212,175,55,0.45)] flex items-center justify-center group"
+              >
+                <img 
+                  src="/assets/MP8.jpeg" 
+                  alt="VINDHYAWASINI TILKUT BHANDAR Royal Heritage Logo" 
+                  className="w-full h-auto max-h-80 object-contain rounded-2xl group-hover:scale-105 transition-transform duration-700 filter drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
+                />
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Right Column: About Narrative, Highlighted Quote, and Action Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.2 }}
+            className="lg:col-span-7 space-y-6 text-center lg:text-left"
+          >
+            <div className="space-y-2">
+              <span className="text-xs uppercase tracking-[0.3em] font-bold text-[#D4AF37] bg-[#0B3D2E] px-4 py-1.5 rounded-full border border-[#D4AF37]/30 inline-block">
+                OUR LEGACY
+              </span>
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#0B3D2E] leading-tight">
+                Serving the Authentic Taste of Gaya for Over 35 Years
+              </h2>
+            </div>
+
+            <div className="space-y-4 text-[#0B3D2E]/85 text-base leading-relaxed font-normal">
+              <p>
+                For more than three decades, <strong>VINDHYAWASINI TILKUT BHANDAR</strong> has been more than just a sweet shop—it has been a part of countless family celebrations, festivals, and cherished memories. Every Tilkut is handcrafted using traditional recipes, premium ingredients, and the same dedication that has been passed down through generations.
+              </p>
+              <p>
+                From grandparents bringing their grandchildren to the shop to families celebrating every special occasion with our sweets, our journey is built on trust, authenticity, and timeless traditions.
+              </p>
+            </div>
+
+            {/* Premium Highlighted Quote Card */}
+            <div className="p-6 bg-[#FFFFFF] rounded-2xl border-l-4 border-[#D4AF37] shadow-luxury space-y-2 my-4 relative overflow-hidden">
+              <Quote className="w-8 h-8 text-[#D4AF37]/30 absolute top-3 right-3" />
+              <p className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#0B3D2E] italic">
+                "Every Bite Carries a Legacy."
+              </p>
+              <span className="text-xs text-[#997D20] font-semibold tracking-wider uppercase block">
+                — Vindhyawasini Family Promise
               </span>
             </div>
 
-            {/* Slider Divider Bar */}
-            <div 
-              className="absolute top-0 bottom-0 w-1 bg-[#D4AF37] shadow-gold-glow cursor-ew-resize flex items-center justify-center"
-              style={{ left: `${sliderPosition}%` }}
-            >
-              <div className="w-10 h-10 rounded-full bg-[#0B2519] border-2 border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shadow-2xl">
-                <Sliders className="w-4 h-4" />
-              </div>
+            {/* Elegant Hover Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <button 
+                onClick={scrollToGallery}
+                className="gold-btn w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-gold-glow group hover:-translate-y-1 transition-all duration-300"
+              >
+                <span>Learn Our Story</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <Link 
+                href="/shop"
+                className="forest-btn w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 hover:-translate-y-1 transition-all duration-300"
+              >
+                <span>Explore Our Sweets</span>
+              </Link>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
 
-      {/* ---------------------------------------------------- */}
-      {/* 5. FAMILY GALLERY SECTION                            */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-[#B8860B] font-bold bg-[#B8860B]/10 px-4 py-1.5 rounded-full border border-[#B8860B]/20">
-            HERITAGE & BELONGING
-          </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#1C2B26]">
-            The Family Gallery
-          </h2>
-          <p className="text-xs sm:text-sm text-[#4A5D55] max-w-md mx-auto">
-            Celebrating traditional celebrations, family smiles, and genuine sweet moments.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {activePhotos.slice(0, 3).map((p, idx) => (
-            <motion.div 
-              key={`family-${p.id}`}
-              whileHover={{ y: -8 }}
-              onClick={() => setLightboxIndex(idx)}
-              className="bg-[#F5F0E6] rounded-3xl border border-[#D4AF37]/30 p-4 space-y-4 shadow-lg cursor-pointer group"
-            >
-              <div className="h-72 rounded-2xl overflow-hidden relative">
-                <img 
-                  src={p.url} 
-                  alt={p.caption} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                />
-              </div>
-              <div className="px-2 pb-2">
-                <p className="text-xs font-mono text-[#8B6508] uppercase tracking-wider">{p.caption}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------- */}
-      {/* 6. PREMIUM MASONRY GALLERY WITH BLUR REVEAL           */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-28 bg-[#F3EDE2] border-t border-[#D4AF37]/20">
+      {/* ========================================================================= */}
+      {/* SECTION 3 – HERITAGE GALLERY ("A JOURNEY THROUGH TIME")                    */}
+      {/* ========================================================================= */}
+      <section ref={galleryRef} className="py-20 sm:py-28 bg-[#F5EFE6] border-y border-[#D4AF37]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
-          <div className="text-center space-y-3">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#B8860B] font-bold bg-[#B8860B]/10 px-4 py-1.5 rounded-full border border-[#B8860B]/20">
-              EDITORIAL ARCHIVES
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs uppercase tracking-[0.3em] font-bold text-[#997D20] bg-[#FAF7F2] px-4 py-1.5 rounded-full border border-[#D4AF37]/30 inline-block">
+              A JOURNEY THROUGH TIME
             </span>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#1C2B26]">
-              Premium Masonry Gallery
+            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#0B3D2E]">
+              Moments of Craftsmanship & Celebration
             </h2>
-            <p className="text-xs sm:text-sm text-[#4A5D55] max-w-md mx-auto">
-              Click any image to view in high resolution fullscreen lightbox.
+            <p className="text-xs sm:text-sm text-[#0B3D2E]/75">
+              Explore 35 years of artisanal devotion, karigar handiwork, and traditional sweet-making heritage.
             </p>
           </div>
 
+          {/* Luxury Masonry Grid Layout with Cinematic Spacing */}
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-            {activePhotos.map((photo, idx) => (
+            {galleryItems.map((item, idx) => (
               <motion.div
-                key={`masonry-${photo.id}`}
-                initial={{ opacity: 0, filter: 'blur(10px)' }}
-                whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: idx * 0.1 }}
-                whileHover={{ scale: 1.02 }}
                 onClick={() => setLightboxIndex(idx)}
-                className="relative rounded-3xl overflow-hidden border border-[#D4AF37]/30 shadow-lg cursor-pointer group break-inside-avoid bg-[#0B2519]"
+                className="relative rounded-[24px] overflow-hidden border border-[#D4AF37]/30 shadow-luxury group cursor-pointer break-inside-avoid bg-[#06241B]"
               >
-                <img 
-                  src={photo.url} 
-                  alt={photo.caption} 
-                  className="w-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B2519]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                  <span className="text-xs font-mono text-[#D4AF37] uppercase tracking-wider">{photo.caption}</span>
+                {/* Image Container with Hover Zoom */}
+                <div className="relative h-72 sm:h-80 overflow-hidden">
+                  <img 
+                    src={item.url} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                  />
+
+                  {/* Dark Glassmorphism Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/90 via-[#06241B]/30 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
+
+                  {/* Top Category Badge */}
+                  <div className="absolute top-4 left-4 bg-[#D4AF37] text-[#0B3D2E] text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                    {item.category}
+                  </div>
+
+                  {/* Expand Lightbox Button */}
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="p-2 bg-[#0B3D2E]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/40 flex items-center justify-center">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+
+                  {/* Bottom Text Content */}
+                  <div className="absolute bottom-5 left-5 right-5 text-[#FAF7F2] space-y-1">
+                    <h3 className="font-serif-luxury text-lg font-bold text-[#F3E5AB]">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-[#FAF7F2]/80 font-light">
+                      {item.subtitle}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -353,39 +336,170 @@ export default function OurLegacyPage() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------- */}
-      {/* 7. ELEGANT VISION SECTION                            */}
-      {/* ---------------------------------------------------- */}
-      <section className="py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8 bg-[#FAF7F2]">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9 }}
-          className="space-y-6 bg-[#0B2519] p-12 sm:p-16 rounded-3xl border-2 border-[#D4AF37]/40 shadow-2xl relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#D4AF37]/15 rounded-full blur-[140px] pointer-events-none" />
-
-          <span className="text-[11px] uppercase tracking-[0.3em] font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-4 py-1.5 rounded-full border border-[#D4AF37]/30">
-            OUR VISION
+      {/* ========================================================================= */}
+      {/* SECTION 4 – CUSTOMER RATINGS PLACEHOLDER ("LOVED BY GENERATIONS")          */}
+      {/* ========================================================================= */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <span className="text-xs uppercase tracking-[0.3em] font-bold text-[#D4AF37] bg-[#0B3D2E] px-4 py-1.5 rounded-full border border-[#D4AF37]/30 inline-block">
+            PATRON TESTIMONIALS
           </span>
+          <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#0B3D2E]">
+            Loved by Generations
+          </h2>
+          <p className="text-sm text-[#0B3D2E]/80 font-medium">
+            Thousands of Happy Families. One Trusted Tradition.
+          </p>
+        </div>
 
-          <blockquote className="font-serif-luxury text-2xl sm:text-4xl text-[#FDFBF7] leading-relaxed font-light italic">
-            "Our vision is to preserve the authentic taste of Bihar's heritage for generations to come, serving every family with uncompromised craftsmanship."
-          </blockquote>
+        {/* Google Ratings & Trust Summary Header Banner */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="bg-[#FFFFFF] p-8 rounded-[24px] border-2 border-[#D4AF37]/40 shadow-luxury max-w-4xl mx-auto text-center space-y-4"
+        >
+          <div className="flex items-center justify-center space-x-1 text-[#D4AF37]">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-6 h-6 fill-current" />
+            ))}
+          </div>
 
-          <div className="pt-2 flex justify-center items-center space-x-3 text-xs font-semibold text-[#D4AF37] uppercase tracking-widest">
-            <Award className="w-4 h-4 text-[#D4AF37]" />
-            <span>Quality • Tradition • Devotion</span>
+          <div className="space-y-1">
+            <h3 className="font-serif-luxury text-2xl font-bold text-[#0B3D2E]">
+              4.9 / 5.0 Star Rated Sweets Brand
+            </h3>
+            <p className="text-xs text-[#0B3D2E]/70 font-semibold uppercase tracking-wider">
+              Based on 2,500+ Verified Customer & Google Reviews
+            </p>
           </div>
         </motion.div>
+
+        {/* Testimonials Placeholder Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          {/* Review Card 1 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#D4AF37]/30 shadow-luxury space-y-4 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center space-x-1 text-[#D4AF37]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-xs sm:text-sm text-[#0B3D2E]/85 italic leading-relaxed">
+                "The Gaya Gud Tilkut brings back childhood memories of winter mornings with grandfather. Pure A2 ghee flavor!"
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-[#D4AF37]/20 flex items-center justify-between">
+              <div>
+                <h4 className="font-bold text-xs text-[#0B3D2E]">Rajesh Sharma</h4>
+                <span className="text-[10px] text-[#997D20] font-semibold">Verified Patron • Patna</span>
+              </div>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+          </motion.div>
+
+          {/* Review Card 2 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#D4AF37]/30 shadow-luxury space-y-4 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center space-x-1 text-[#D4AF37]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-xs sm:text-sm text-[#0B3D2E]/85 italic leading-relaxed">
+                "Ordered Silao Khaja for my daughter's wedding hampers. The flaky crispness and royal packaging wowed all our guests!"
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-[#D4AF37]/20 flex items-center justify-between">
+              <div>
+                <h4 className="font-bold text-xs text-[#0B3D2E]">Meenakshi Verma</h4>
+                <span className="text-[10px] text-[#997D20] font-semibold">Wedding Order Patron • Gaya</span>
+              </div>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+          </motion.div>
+
+          {/* Review Card 3 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#D4AF37]/30 shadow-luxury space-y-4 flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center space-x-1 text-[#D4AF37]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
+                ))}
+              </div>
+              <p className="text-xs sm:text-sm text-[#0B3D2E]/85 italic leading-relaxed">
+                "Sugar-Free Anjeer Barfi and Gud Tilkut are staple winter treats for our entire family. 35 years of uncompromised quality!"
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-[#D4AF37]/20 flex items-center justify-between">
+              <div>
+                <h4 className="font-bold text-xs text-[#0B3D2E]">Dr. Amitabh Roy</h4>
+                <span className="text-[10px] text-[#997D20] font-semibold">Loyal Patron • Kolkata</span>
+              </div>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+          </motion.div>
+
+        </div>
+
+        {/* Trust Badges Bar */}
+        <div className="bg-[#0B3D2E] text-[#FAF7F2] p-8 rounded-[24px] border border-[#D4AF37]/40 shadow-2xl grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          <div className="space-y-1">
+            <Award className="w-6 h-6 text-[#D4AF37] mx-auto" />
+            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">35+ Years Legacy</h4>
+            <p className="text-[11px] text-[#FAF7F2]/75">Established in 1974</p>
+          </div>
+
+          <div className="space-y-1">
+            <ShieldCheck className="w-6 h-6 text-[#D4AF37] mx-auto" />
+            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">100% Pure A2 Ghee</h4>
+            <p className="text-[11px] text-[#FAF7F2]/75">Zero Artificial Additives</p>
+          </div>
+
+          <div className="space-y-1">
+            <MapPin className="w-6 h-6 text-[#D4AF37] mx-auto" />
+            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">Gaya & Silao Origin</h4>
+            <p className="text-[11px] text-[#FAF7F2]/75">Authentic Regional Karigars</p>
+          </div>
+
+          <div className="space-y-1">
+            <Users className="w-6 h-6 text-[#D4AF37] mx-auto" />
+            <h4 className="font-serif-luxury font-bold text-base text-[#F3E5AB]">Generations of Trust</h4>
+            <p className="text-[11px] text-[#FAF7F2]/75">Thousands of Happy Families</p>
+          </div>
+        </div>
+
       </section>
 
-      {/* ---------------------------------------------------- */}
-      {/* INTERACTIVE LIGHTBOX MODAL (FULLSCREEN & ZOOM)        */}
-      {/* ---------------------------------------------------- */}
+      {/* ========================================================================= */}
+      {/* INTERACTIVE FULLSCREEN LIGHTBOX MODAL                                    */}
+      {/* ========================================================================= */}
       <AnimatePresence>
-        {lightboxIndex !== null && activePhotos[lightboxIndex] && (
+        {lightboxIndex !== null && galleryItems[lightboxIndex] && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -393,21 +507,21 @@ export default function OurLegacyPage() {
             onClick={() => { setLightboxIndex(null); setIsZoomed(false); }}
             className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-8 select-none"
           >
-            {/* Top Toolbar */}
+            {/* Top Lightbox Bar */}
             <div className="flex justify-between items-center z-20" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center space-x-3 text-[#D4AF37]">
-                <span className="text-xs font-mono uppercase tracking-wider bg-[#0B2519] px-3 py-1.5 rounded-xl border border-[#D4AF37]/30">
-                  {lightboxIndex + 1} / {activePhotos.length}
+                <span className="text-xs font-mono uppercase tracking-wider bg-[#0B3D2E] px-3.5 py-1.5 rounded-xl border border-[#D4AF37]/30">
+                  {lightboxIndex + 1} / {galleryItems.length}
                 </span>
-                <span className="text-xs text-[#D4AF37]/70 hidden sm:inline-block">
-                  Protected Image Asset
+                <span className="text-xs text-[#D4AF37]/80 font-semibold hidden sm:inline-block">
+                  VINDHYAWASINI TILKUT BHANDAR • Heritage Archive
                 </span>
               </div>
 
               <div className="flex items-center space-x-3">
                 <button 
                   onClick={() => setIsZoomed(!isZoomed)}
-                  className="p-2.5 bg-[#0B2519] text-[#D4AF37] rounded-full border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all"
+                  className="p-2.5 bg-[#0B3D2E] text-[#D4AF37] rounded-full border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all"
                   title={isZoomed ? "Zoom Out" : "Zoom In"}
                 >
                   {isZoomed ? <ZoomOut className="w-5 h-5" /> : <ZoomIn className="w-5 h-5" />}
@@ -415,24 +529,24 @@ export default function OurLegacyPage() {
 
                 <button 
                   onClick={() => { setLightboxIndex(null); setIsZoomed(false); }}
-                  className="p-2.5 bg-[#0B2519] text-[#D4AF37] rounded-full border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all"
+                  className="p-2.5 bg-[#0B3D2E] text-[#D4AF37] rounded-full border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-all"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            {/* Main Fullscreen Image Area */}
+            {/* Lightbox Main Image Display */}
             <div 
               className="relative flex-1 flex items-center justify-center overflow-hidden my-4"
               onClick={(e) => e.stopPropagation()}
             >
               <button 
                 onClick={() => {
-                  setLightboxIndex((prev) => (prev - 1 + activePhotos.length) % activePhotos.length);
+                  setLightboxIndex((prev) => (prev - 1 + galleryItems.length) % galleryItems.length);
                   setIsZoomed(false);
                 }}
-                className="absolute left-4 z-20 p-3 bg-[#0B2519]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/40 hover:bg-[#D4AF37] hover:text-[#0B2519] transition-all shadow-2xl"
+                className="absolute left-4 z-20 p-3 bg-[#0B3D2E]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/40 hover:bg-[#D4AF37] hover:text-[#0B3D2E] transition-all shadow-2xl"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
@@ -444,20 +558,18 @@ export default function OurLegacyPage() {
                 onClick={() => setIsZoomed(!isZoomed)}
               >
                 <img 
-                  src={activePhotos[lightboxIndex].url} 
-                  alt={activePhotos[lightboxIndex].caption} 
-                  className="max-h-[78vh] max-w-full object-contain rounded-2xl border border-[#D4AF37]/30 shadow-2xl pointer-events-auto"
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
+                  src={galleryItems[lightboxIndex].url} 
+                  alt={galleryItems[lightboxIndex].title} 
+                  className="max-h-[78vh] max-w-full object-contain rounded-2xl border border-[#D4AF37]/30 shadow-2xl"
                 />
               </div>
 
               <button 
                 onClick={() => {
-                  setLightboxIndex((prev) => (prev + 1) % activePhotos.length);
+                  setLightboxIndex((prev) => (prev + 1) % galleryItems.length);
                   setIsZoomed(false);
                 }}
-                className="absolute right-4 z-20 p-3 bg-[#0B2519]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/40 hover:bg-[#D4AF37] hover:text-[#0B2519] transition-all shadow-2xl"
+                className="absolute right-4 z-20 p-3 bg-[#0B3D2E]/80 text-[#D4AF37] rounded-full border border-[#D4AF37]/40 hover:bg-[#D4AF37] hover:text-[#0B3D2E] transition-all shadow-2xl"
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -465,78 +577,19 @@ export default function OurLegacyPage() {
 
             {/* Bottom Caption */}
             <div className="z-20 text-center max-w-4xl mx-auto w-full" onClick={(e) => e.stopPropagation()}>
-              <p className="text-xs sm:text-sm text-[#D4AF37] font-mono uppercase tracking-widest bg-[#0B2519]/90 px-4 py-2 rounded-xl border border-[#D4AF37]/20 inline-block">
-                {activePhotos[lightboxIndex].caption}
-              </p>
+              <div className="bg-[#0B3D2E]/90 px-5 py-2.5 rounded-xl border border-[#D4AF37]/30 inline-block space-y-0.5">
+                <p className="text-sm font-bold text-[#F3E5AB]">
+                  {galleryItems[lightboxIndex].title}
+                </p>
+                <p className="text-xs text-[#FAF7F2]/80">
+                  {galleryItems[lightboxIndex].subtitle}
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
     </div>
-  );
-}
-
-// ---------------------------------------------------- //
-// ANIMATED PHOTO WALL CARD COMPONENT                   //
-// ---------------------------------------------------- //
-function AnimatedPhotoWallCard({ photo, index, onOpenLightbox }) {
-  const cardRef = useRef(null);
-  const isEven = index % 2 === 0;
-
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "end start"]
-  });
-
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [35, -35]);
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, x: isEven ? -60 : 60, scale: 0.94 }}
-      whileInView={{ opacity: 1, x: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-4"
-    >
-      <motion.div 
-        style={{ y: parallaxY }}
-        onClick={onOpenLightbox}
-        className="relative w-full h-[60vh] sm:h-[72vh] rounded-3xl overflow-hidden border-2 border-[#D4AF37]/30 shadow-2xl cursor-pointer group bg-[#0B2519]"
-      >
-        <img 
-          src={photo.url} 
-          alt={photo.caption} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
-          onContextMenu={(e) => e.preventDefault()}
-          onDragStart={(e) => e.preventDefault()}
-        />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
-
-        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="bg-[#0B2519] text-[#D4AF37] border border-[#D4AF37]/40 px-4 py-2 rounded-full text-xs font-bold flex items-center space-x-1.5 shadow-gold-glow">
-            <Maximize2 className="w-3.5 h-3.5" />
-            <span>Fullscreen</span>
-          </span>
-        </div>
-
-        <div className="absolute top-6 left-6">
-          <span className="text-[11px] font-mono font-bold text-[#D4AF37] bg-[#0B2519]/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#D4AF37]/30 shadow">
-            PHOTO 0{index + 1}
-          </span>
-        </div>
-      </motion.div>
-
-      <div className="flex justify-between items-center px-4">
-        <p className="text-xs sm:text-sm font-mono text-[#8B6508] uppercase tracking-widest">
-          {photo.caption}
-        </p>
-        <span className="text-[10px] text-[#4A5D55] uppercase tracking-widest font-mono">
-          Bindhyawasini Archives
-        </span>
-      </div>
-    </motion.div>
   );
 }

@@ -26,7 +26,7 @@ export const HeritageStory = () => {
             </h2>
 
             <p className="text-royal-goldMuted/80 text-sm leading-relaxed font-light">
-              Bindhyawasini was founded with a singular mission: to serve authentic Bihari sweets prepared exactly as our forefathers made them. From hand-pounding white sesame in wooden mortars for Gaya Tilkut to creating 64 delicate flaky layers for Silao Khaja, every box reflects royal Bihari culture.
+              VINDHYAWASINI TILKUT BHANDAR was founded with a singular mission: to serve authentic Bihari sweets prepared exactly as our forefathers made them. From hand-pounding white sesame in wooden mortars for Gaya Tilkut to creating 64 delicate flaky layers for Silao Khaja, every box reflects royal Bihari culture.
             </p>
 
             <div className="grid grid-cols-2 gap-4 pt-4">
@@ -58,8 +58,8 @@ export const HeritageStory = () => {
           >
             <div className="relative rounded-3xl overflow-hidden border-2 border-royal-gold/30 shadow-luxury">
               <img 
-                src="https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?q=80&w=1000&auto=format&fit=crop" 
-                alt="Bihari Karigar Preparation" 
+                src="/assets/MP6.jpeg" 
+                alt="VINDHYAWASINI TILKUT BHANDAR Karigar Preparation" 
                 className="w-full h-[450px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-royal-greenDark/90 via-transparent to-transparent" />

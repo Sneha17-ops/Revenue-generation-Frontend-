@@ -23,7 +23,7 @@ export default function CustomerDashboardPage() {
             <div>
               <span className="text-xs uppercase tracking-widest text-royal-gold font-bold">Royal Patron Profile</span>
               <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-royal-ivory">{user?.name || "Valued Connoisseur"}</h1>
-              <p className="text-xs text-royal-goldMuted">{user?.email || user?.phone || "patron@bindhyawasini.com"}</p>
+              <p className="text-xs text-royal-goldMuted">{user?.email || user?.phone || "patron@vindhyawasini.com"}</p>
             </div>
           </div>
 

@@ -42,7 +42,7 @@ export const WhyChooseUs = () => {
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <span className="text-xs uppercase tracking-[0.25em] text-royal-goldDark font-bold">
-            The Bindhyawasini Difference
+            The VINDHYAWASINI TILKUT BHANDAR Difference
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-royal-green">
             Why Discerning Connoisseurs Choose Us

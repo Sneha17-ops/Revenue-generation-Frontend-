@@ -15,7 +15,7 @@ export const TestimonialsMarquee = () => {
       name: "Dr. Ananya Roy",
       role: "Health Professional",
       location: "Kolkata",
-      text: "The Sugar-Free Anjeer Khajur Barfi is a blessing! Pure natural ingredients with 0% refined sugar. Bindhyawasini is pure luxury.",
+      text: "The Sugar-Free Anjeer Khajur Barfi is a blessing! Pure natural ingredients with 0% refined sugar. VINDHYAWASINI TILKUT BHANDAR is pure luxury.",
       rating: 5,
       date: "Verified Buyer"
     },

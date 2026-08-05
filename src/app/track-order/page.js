@@ -34,7 +34,7 @@ function TrackOrderContent() {
           Track Your Fresh Batch Order
         </h1>
         <p className="text-xs text-royal-goldMuted/80 max-w-lg mx-auto">
-          Enter your Bindhyawasini Order ID to view real-time delivery milestones and kitchen preparation status.
+          Enter your VINDHYAWASINI TILKUT BHANDAR Order ID to view real-time delivery milestones and kitchen preparation status.
         </p>
       </div>
 

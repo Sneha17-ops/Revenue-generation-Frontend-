@@ -165,7 +165,7 @@ export default function AdminPage() {
               </span>
             </div>
             <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-royal-gold mt-2">
-              Bindhyawasini Command Center
+              VINDHYAWASINI TILKUT BHANDAR Command Center
             </h1>
           </div>
 

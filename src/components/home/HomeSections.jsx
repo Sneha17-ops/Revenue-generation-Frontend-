@@ -211,7 +211,7 @@ export const FAQSection = () => {
   const FAQS = [
     {
       q: "Do you deliver pan-India or internationally?",
-      a: "No. Bindhyawasini currently operates on a city-limits-only express delivery model to guarantee maximum freshness of our pure A2 ghee sweets. We do not provide international shipping."
+      a: "No. VINDHYAWASINI TILKUT BHANDAR currently operates on a city-limits-only express delivery model to guarantee maximum freshness of our pure A2 ghee sweets. We do not provide international shipping."
     },
     {
       q: "How are city delivery charges calculated?",

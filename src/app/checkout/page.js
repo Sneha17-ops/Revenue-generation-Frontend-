@@ -144,13 +144,13 @@ export default function CheckoutPage() {
           key: keyId,
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency || "INR",
-          name: "Bindhyawasini Luxury Confectionery",
+          name: "VINDHYAWASINI TILKUT BHANDAR",
           description: `Payment for Order ${orderId} (${cart.length} Sweets)`,
           image: "/images/sweets/kaju_katli.webp",
           order_id: razorpayOrder.id,
           prefill: {
             name: formData.name || user?.name || "Patron",
-            email: user?.email || "patron@bindhyawasini.com",
+            email: "patron@vindhyawasini.com",
             contact: formData.phone || user?.phone || "9876543210"
           },
           theme: {
@@ -558,7 +558,7 @@ export default function CheckoutPage() {
                 Order Confirmed Successfully!
               </h2>
               <p className="text-xs text-royal-goldMuted">
-                Thank you for patronizing Bindhyawasini. Your order receipt is printed below.
+                Thank you for patronizing VINDHYAWASINI TILKUT BHANDAR. Your order receipt is printed below.
               </p>
             </div>
 

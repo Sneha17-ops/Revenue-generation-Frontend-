@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <title>Bindhyawasini | Traditional Bihari Sweets & Luxury Confectionery</title>
+        <title>VINDHYAWASINI TILKUT BHANDAR | Traditional Bihari Sweets & Luxury Confectionery</title>
         <meta name="description" content="India's most trusted premium sweets brand preserving the traditional culture of Bihar. Handcrafted Gaya Tilkut, Silao Khaja, and pure A2 ghee sweets." />
         <link rel="icon" href="/favicon.ico" />
       </head>

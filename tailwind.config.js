@@ -9,9 +9,11 @@ export default {
     extend: {
       colors: {
         royal: {
-          green: '#0B2519',
-          greenDark: '#05150D',
-          greenLight: '#153A29',
+          green: '#0B3D2E',
+          greenDark: '#06241B',
+          greenLight: '#135440',
+          cream: '#FAF7F2',
+          creamDark: '#F5EFE6',
           gold: '#D4AF37',
           goldHover: '#E5C158',
           goldMuted: '#F3E5AB',
@@ -28,21 +30,24 @@ export default {
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #997D20 100%)',
-        'emerald-gradient': 'linear-gradient(135deg, #153A29 0%, #0B2519 60%, #05150D 100%)',
-        'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-        'dark-glass': 'linear-gradient(135deg, rgba(11,37,25,0.85) 0%, rgba(5,21,13,0.95) 100%)',
+        'gold-shine': 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)',
+        'emerald-gradient': 'linear-gradient(135deg, #135440 0%, #0B3D2E 60%, #06241B 100%)',
+        'cream-gradient': 'linear-gradient(180deg, #FAF7F2 0%, #F5EFE6 100%)',
+        'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%)',
+        'dark-glass': 'linear-gradient(135deg, rgba(11,61,46,0.92) 0%, rgba(6,36,27,0.96) 100%)',
       },
       boxShadow: {
-        'luxury': '0 20px 40px -15px rgba(11, 37, 25, 0.15)',
-        'luxury-hover': '0 30px 60px -12px rgba(212, 175, 55, 0.25)',
-        'gold-glow': '0 0 25px rgba(212, 175, 55, 0.4)',
-        'glass': '0 8px 32px 0 rgba(11, 37, 25, 0.2)',
+        'luxury': '0 20px 40px -15px rgba(11, 61, 46, 0.1)',
+        'luxury-hover': '0 30px 60px -12px rgba(212, 175, 55, 0.3)',
+        'gold-glow': '0 0 25px rgba(212, 175, 55, 0.45)',
+        'gold-glow-lg': '0 0 35px rgba(212, 175, 55, 0.65)',
+        'glass': '0 8px 32px 0 rgba(11, 61, 46, 0.08)',
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
-        'shimmer': 'shimmer 2.5s infinite',
-        'spin-slow': 'spin 20s linear infinite',
+        'shimmer': 'shimmer 3s ease-in-out infinite',
+        'spin-slow': 'spin 25s linear infinite',
       },
       keyframes: {
         float: {

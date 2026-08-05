@@ -12,7 +12,7 @@ export default function ShippingPolicyPage() {
         
         <div className="space-y-4 text-xs text-royal-goldMuted/80 leading-relaxed">
           <p className="font-bold text-royal-ivory">
-            IMPORTANT: Bindhyawasini delivers strictly within city limits. We do not provide pan-India or international shipping.
+            IMPORTANT: VINDHYAWASINI TILKUT BHANDAR delivers strictly within city limits. We do not provide pan-India or international shipping.
           </p>
           <p>
             1. <strong>Delivery Radius:</strong> Express delivery is available within a {CITY_DELIVERY_RULES.maxCityRadiusKm} km radius from our main store kitchen.

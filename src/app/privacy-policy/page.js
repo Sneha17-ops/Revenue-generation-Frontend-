@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         
         <div className="space-y-4 text-xs text-royal-goldMuted/80 leading-relaxed">
           <p>
-            At Bindhyawasini, we value your privacy. Personal data collected during checkout (name, delivery phone number, address) is encrypted and strictly used to fulfill your city orders.
+            At VINDHYAWASINI TILKUT BHANDAR, we value your privacy. Personal data collected during checkout (name, delivery phone number, address) is encrypted and strictly used to fulfill your city orders.
           </p>
           <p>
             We do not sell, rent, or trade customer information with any third-party marketing vendors.

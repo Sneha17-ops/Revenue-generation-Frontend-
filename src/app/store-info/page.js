@@ -27,7 +27,7 @@ export default function StoreInfoPage() {
                 <MapPin className="w-5 h-5 text-royal-gold shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-royal-ivory block">Store Address</span>
-                  <span>Bindhyawasini Sweets, Main Road, City Center, Bihar</span>
+                  <span>VINDHYAWASINI TILKUT BHANDAR, Main Road, City Center, Bihar</span>
                 </div>
               </div>
 
@@ -69,8 +69,8 @@ export default function StoreInfoPage() {
             </p>
             <div className="relative h-48 rounded-2xl overflow-hidden border border-royal-gold/30">
               <img 
-                src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1000&auto=format&fit=crop" 
-                alt="Wedding Gifting Trunks" 
+                src="/assets/MP6.jpeg" 
+                alt="VINDHYAWASINI TILKUT BHANDAR Hampers" 
                 className="w-full h-full object-cover"
               />
             </div>

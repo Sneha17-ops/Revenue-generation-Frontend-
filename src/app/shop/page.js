@@ -298,7 +298,7 @@ function ShopContent() {
           {/* Action WhatsApp & Call Buttons */}
           <div className="flex flex-wrap justify-center items-center gap-4 pt-4 relative z-10">
             <a 
-              href={`https://wa.me/${CITY_DELIVERY_RULES.whatsAppOrderNumber}?text=Hello%20Bindhyawasini!%20I%20would%20like%20to%20inquire%20about%20Custom%20Wedding%20Sweets%20and%20Tokri%20Laddu%20Orders.`}
+              href={`https://wa.me/${CITY_DELIVERY_RULES.whatsAppOrderNumber}?text=Hello%20VINDHYAWASINI%20TILKUT%20BHANDAR!%20I%20would%20like%20to%20inquire%20about%20Custom%20Wedding%20Sweets%20and%20Tokri%20Laddu%20Orders.`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border border-emerald-400/40 shadow-lg"
