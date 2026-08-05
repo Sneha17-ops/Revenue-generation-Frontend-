@@ -113,11 +113,11 @@ export const Navbar = ({ onOpenSearch }) => {
 
             {/* Brand Logo & Title */}
             <Link href="/" className="flex items-center space-x-3 group shrink-0 mr-4 xl:mr-8">
-              <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#06241B] border border-[#D4AF37]/50 flex items-center justify-center p-1.5 group-hover:border-[#D4AF37] group-hover:scale-105 transition-all shadow-gold-glow">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#06241B] border border-[#D4AF37]/50 flex items-center justify-center p-1 group-hover:border-[#D4AF37] group-hover:scale-105 transition-all shadow-gold-glow overflow-hidden">
                 <img 
-                  src="/logo.svg" 
+                  src="/assets/MP8.jpeg" 
                   alt="VINDHYAWASINI TILKUT BHANDAR" 
-                  className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" 
+                  className="w-full h-full object-contain rounded-xl filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" 
                 />
               </div>
               <div className="flex flex-col">

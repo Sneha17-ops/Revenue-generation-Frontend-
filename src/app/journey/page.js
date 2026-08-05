@@ -31,6 +31,15 @@ export default function OurLegacyPage() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [showTextBanner, setShowTextBanner] = useState(true);
+
+  // Automatically fade out the video text banner after 2.5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTextBanner(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Gallery items using local high-res assets
   const galleryItems = [
@@ -125,6 +134,7 @@ export default function OurLegacyPage() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          onMouseEnter={() => setShowTextBanner(true)}
           className="relative w-full h-[65vh] sm:h-[75vh] lg:h-[82vh] rounded-[20px] overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 group"
         >
           {/* Autoplay Cinematic Heritage Video */}
@@ -152,27 +162,37 @@ export default function OurLegacyPage() {
             </div>
           </div>
 
-          {/* Bottom Glassmorphism Banner Overlay to ensure text doesn't obscure video visual action */}
-          <div className="absolute bottom-6 left-6 right-6 sm:left-8 sm:right-8 z-10 bg-[#06241B]/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-[#D4AF37]/35 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1 max-w-2xl text-[#FAF7F2]">
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F3E5AB] block">
-                FAMILY • TRADITION • HERITAGE • TRUST
-              </span>
-              <h1 className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
-                Crafting Authentic Bihari Sweets Since 1995
-              </h1>
-            </div>
+          {/* Bottom Glassmorphism Banner Overlay: Appears for 2.5s and smoothly fades out */}
+          <AnimatePresence>
+            {showTextBanner && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute bottom-6 left-6 right-6 sm:left-8 sm:right-8 z-10 bg-[#06241B]/85 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-[#D4AF37]/35 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 pointer-events-auto"
+              >
+                <div className="space-y-1 max-w-2xl text-[#FAF7F2]">
+                  <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F3E5AB] block">
+                    FAMILY • TRADITION • HERITAGE • TRUST
+                  </span>
+                  <h1 className="font-heading text-xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
+                    Crafting Authentic Bihari Sweets Since 1995
+                  </h1>
+                </div>
 
-            {/* Video Play/Pause Control Button */}
-            <button
-              onClick={togglePlay}
-              className="self-start md:self-auto px-4 py-2 bg-[#0B3D2E] hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-xl border border-[#D4AF37]/40 transition-all text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shrink-0 shadow-lg"
-              title={isPlaying ? "Pause Video" : "Play Video"}
-            >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              <span>{isPlaying ? "Pause" : "Play"}</span>
-            </button>
-          </div>
+                {/* Video Play/Pause Control Button */}
+                <button
+                  onClick={togglePlay}
+                  className="self-start md:self-auto px-4 py-2 bg-[#0B3D2E] hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#0B3D2E] rounded-xl border border-[#D4AF37]/40 transition-all text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shrink-0 shadow-lg"
+                  title={isPlaying ? "Pause Video" : "Play Video"}
+                >
+                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  <span>{isPlaying ? "Pause" : "Play"}</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </section>
 
