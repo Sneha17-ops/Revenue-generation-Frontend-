@@ -41,9 +41,9 @@ export const Navbar = ({ onOpenSearch }) => {
   }, []);
 
   const navLinks = [
+    { name: 'Legacy', href: '/journey' },
     { name: 'Home', href: '/' },
     { name: 'Menu', href: '/shop' },
-    { name: 'Our Legacy', href: '/journey' },
     { name: 'Contact', href: '/store-info' },
   ];
 
