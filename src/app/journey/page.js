@@ -25,6 +25,8 @@ import {
   Users,
   CheckCircle2
 } from 'lucide-react';
+import HeritageBackground from '../../components/ui/HeritageBackground';
+import CustomCursor from '../../components/ui/CustomCursor';
 
 export default function OurLegacyPage() {
   const videoRef = useRef(null);
@@ -33,13 +35,13 @@ export default function OurLegacyPage() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
-  const [showHeroCard, setShowHeroCard] = useState(false);
-
-  // Trigger information card animation and scroll indicator after 8 seconds of video playback
+  // Automatically scroll down to Section 2 (About section) after the 8.5 second video finishes
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowHeroCard(true);
-    }, 8000);
+      if (aboutRef.current) {
+        aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 8500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -132,17 +134,24 @@ export default function OurLegacyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#0B3D2E] overflow-x-hidden font-sans selection:bg-[#D4AF37] selection:text-[#0B3D2E]">
+    <div className="relative min-h-screen bg-[#FAF7F2] text-[#0B3D2E] overflow-x-hidden font-sans selection:bg-[#D4AF37] selection:text-[#0B3D2E]">
+      
+      {/* 1. Heritage Background Pattern & Dynamic Parallax Layer */}
+      <HeritageBackground />
+
+      {/* 2. Desktop Custom Gold Luxury Cursor */}
+      <CustomCursor />
       
       {/* ========================================================================= */}
-      {/* SECTION 1 – HERO VIDEO BANNER                                             */}
+      {/* SECTION 1 – HERO VIDEO BANNER (Ultra-Clean Luxury Brand Film)              */}
       {/* ========================================================================= */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-6 max-w-7xl mx-auto flex flex-col items-center">
+      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-6 max-w-7xl mx-auto flex flex-col items-center z-10">
         <motion.div 
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative w-full h-[65vh] sm:h-[75vh] lg:h-[82vh] rounded-[20px] overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 group"
+          data-cursor="card"
         >
           {/* Autoplay Cinematic Heritage Video */}
           <video
@@ -151,94 +160,78 @@ export default function OurLegacyPage() {
             loop
             muted
             playsInline
-            onEnded={() => setShowHeroCard(true)}
+            onEnded={scrollToAbout}
             poster="/assets/MP6.jpeg"
-            className="w-full h-full object-cover filter brightness-[0.95] contrast-[1.05]"
+            className="w-full h-full object-cover filter brightness-[0.96] contrast-[1.05]"
           >
             <source src="/assets/MP7.mp4" type="video/mp4" />
             <img src="/assets/MP6.jpeg" alt="VINDHYAWASINI TILKUT BHANDAR Heritage" className="w-full h-full object-cover" />
           </video>
 
-          {/* Subtle Dark Luxury Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/70 via-transparent to-transparent pointer-events-none" />
+          {/* Subtle Dark Luxury Gradient Overlay for Title & Readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#06241B]/60 via-transparent to-[#06241B]/70 pointer-events-none" />
 
-          {/* Floating Top Badge Overlay */}
+          {/* Floating Top Badge (Top-Left) */}
           <div className="absolute top-6 left-6 z-10">
-            <div className="inline-flex items-center space-x-2 bg-[#0B3D2E]/80 backdrop-blur-md text-[#D4AF37] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center space-x-2 bg-[#06241B]/75 backdrop-blur-md text-[#D4AF37] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span>Legacy Since 1995</span>
             </div>
           </div>
 
-          {/* Small Circular Play/Pause Icon Button (Bottom-Right Corner) */}
+          {/* Minimal Circular Play/Pause Control (Bottom-Right Corner) */}
           <button
             onClick={togglePlay}
+            data-cursor="pointer"
             className="absolute bottom-5 right-5 sm:bottom-6 sm:right-6 z-20 w-10 h-10 rounded-full bg-[#06241B]/80 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#06241B] border border-[#D4AF37]/40 backdrop-blur-md flex items-center justify-center transition-all shadow-lg hover:scale-110"
             title={isPlaying ? "Pause Video" : "Play Video"}
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-[#D4AF37] translate-x-0.5" />}
           </button>
-
-          {/* Premium Animated Information Card (Option 1) */}
-          <AnimatePresence>
-            {showHeroCard && (
-              <motion.div 
-                initial={{ opacity: 0, y: 80 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 40 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="absolute bottom-5 left-5 right-16 sm:bottom-6 sm:left-6 sm:right-20 z-10 bg-[#06241B]/75 backdrop-blur-xl p-4 sm:p-5 rounded-[20px] border border-[#D4AF37]/35 shadow-2xl max-w-xl pointer-events-auto"
-              >
-                <div className="space-y-1 text-[#FAF7F2]">
-                  <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] font-semibold text-[#F3E5AB] block">
-                    Family • Tradition • Heritage • Trust
-                  </span>
-                  <h1 className="font-heading text-lg sm:text-2xl lg:text-3xl font-bold leading-snug tracking-wide text-white drop-shadow-sm">
-                    Crafting Authentic Bihari Sweets Since 1995
-                  </h1>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
 
-        {/* Scroll Indicator: Displays gently after the video ends / card appears */}
-        <AnimatePresence>
-          {showHeroCard && (
-            <motion.button
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              onClick={scrollToAbout}
-              className="mt-6 flex flex-col items-center text-[#D4AF37] hover:text-[#0B3D2E] transition-colors group cursor-pointer"
-            >
-              <span className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-1">
-                Scroll to Discover Our Story
-              </span>
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <ChevronDown className="w-5 h-5 text-[#D4AF37] group-hover:text-[#0B3D2E] transition-colors" />
-              </motion.div>
-            </motion.button>
-          )}
-        </AnimatePresence>
+        {/* Subtle Animated Cue at the Bottom */}
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          onClick={scrollToAbout}
+          data-cursor="pointer"
+          className="mt-6 flex flex-col items-center text-[#D4AF37] hover:text-[#0B3D2E] transition-colors group cursor-pointer"
+        >
+          <span className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-1">
+            ↓ Scroll to Discover Our Legacy
+          </span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-5 h-5 text-[#D4AF37] group-hover:text-[#0B3D2E] transition-colors" />
+          </motion.div>
+        </motion.button>
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2 – LOGO REVEAL & ABOUT SECTION                                   */}
+      {/* SECTION 2 – LOGO REVEAL & ABOUT OUR LEGACY                                */}
       {/* ========================================================================= */}
-      <section ref={aboutRef} className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section ref={aboutRef} className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10">
+        
+        {/* Decorative Heritage Corner Ornaments */}
+        <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-[#D4AF37]/25 pointer-events-none hidden sm:block" />
+        <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-[#D4AF37]/25 pointer-events-none hidden sm:block" />
+        <div className="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-[#D4AF37]/25 pointer-events-none hidden sm:block" />
+        <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-[#D4AF37]/25 pointer-events-none hidden sm:block" />
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Animated Logo Emblem with Floating Animation & Soft Golden Glow */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex justify-center"
+            data-cursor="card"
           >
             <div className="relative">
               {/* Radial Golden Background Glow */}
@@ -248,7 +241,7 @@ export default function OurLegacyPage() {
               <motion.div 
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-                className="relative w-72 sm:w-96 p-4 rounded-[28px] bg-gradient-to-tr from-[#06241B] via-[#0B3D2E] to-[#135440] border-2 border-[#D4AF37] shadow-[0_0_40px_rgba(212,175,55,0.45)] flex items-center justify-center group"
+                className="relative w-72 sm:w-96 p-4 rounded-[28px] bg-gradient-to-tr from-[#06241B] via-[#0B3D2E] to-[#135440] border-2 border-[#D4AF37] shadow-[0_0_40px_rgba(212,175,55,0.45)] flex items-center justify-center group cursor-pointer"
               >
                 <img 
                   src="/assets/MP8.jpeg" 
@@ -269,26 +262,26 @@ export default function OurLegacyPage() {
           >
             <div className="space-y-2">
               <span className="text-xs uppercase tracking-[0.3em] font-bold text-[#D4AF37] bg-[#0B3D2E] px-4 py-1.5 rounded-full border border-[#D4AF37]/30 inline-block">
-                OUR LEGACY
+                FAMILY • TRADITION • HERITAGE • TRUST
               </span>
-              <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#0B3D2E] leading-tight">
-                Serving the Authentic Taste of Gaya for Over 35 Years
+              <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#0B3D2E] leading-tight">
+                Crafting Authentic Bihari Sweets Since 1995
               </h2>
             </div>
 
             <div className="space-y-4 text-[#0B3D2E]/85 text-base leading-relaxed font-normal">
               <p>
-                For more than three decades, <strong>VINDHYAWASINI TILKUT BHANDAR</strong> has been more than just a sweet shop—it has been a part of countless family celebrations, festivals, and cherished memories. Every Tilkut is handcrafted using traditional recipes, premium ingredients, and the same dedication that has been passed down through generations.
+                For over 30 years, <strong>VINDHYAWASINI TILKUT BHANDAR</strong> has been the gold standard of authentic Bihari confectionery. Handcrafted in Gaya with 100% pure A2 cow ghee, premium sesame seeds, and traditional wood-fired hand-pounding methods, every sweet carries the warmth of family heritage and artisanal perfection.
               </p>
               <p>
-                From grandparents bringing their grandchildren to the shop to families celebrating every special occasion with our sweets, our journey is built on trust, authenticity, and timeless traditions.
+                From festive celebrations to everyday family moments, our recipes remain unchanged, preserving the authentic taste of Gaya loved across generations.
               </p>
             </div>
 
             {/* Premium Highlighted Quote Card */}
-            <div className="p-6 bg-[#FFFFFF] rounded-2xl border-l-4 border-[#D4AF37] shadow-luxury space-y-2 my-4 relative overflow-hidden">
+            <div className="p-6 bg-[#FFFFFF]/90 backdrop-blur-md rounded-2xl border-l-4 border-[#D4AF37] shadow-luxury space-y-2 my-4 relative overflow-hidden" data-cursor="card">
               <Quote className="w-8 h-8 text-[#D4AF37]/30 absolute top-3 right-3" />
-              <p className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#0B3D2E] italic">
+              <p className="font-heading text-xl sm:text-2xl font-bold text-[#0B3D2E] italic">
                 "Every Bite Carries a Legacy."
               </p>
               <span className="text-xs text-[#997D20] font-semibold tracking-wider uppercase block">
@@ -296,18 +289,20 @@ export default function OurLegacyPage() {
               </span>
             </div>
 
-            {/* Elegant Hover Buttons */}
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <button 
                 onClick={scrollToGallery}
+                data-cursor="pointer"
                 className="gold-btn w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-gold-glow group hover:-translate-y-1 transition-all duration-300"
               >
-                <span>Learn Our Story</span>
+                <span>Learn More & Discover Gallery</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <Link 
                 href="/shop"
+                data-cursor="pointer"
                 className="forest-btn w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 hover:-translate-y-1 transition-all duration-300"
               >
                 <span>Explore Our Sweets</span>
@@ -321,7 +316,7 @@ export default function OurLegacyPage() {
       {/* ========================================================================= */}
       {/* SECTION 3 – HERITAGE GALLERY ("A JOURNEY THROUGH TIME")                    */}
       {/* ========================================================================= */}
-      <section ref={galleryRef} className="py-20 sm:py-28 bg-[#F5EFE6] border-y border-[#D4AF37]/20">
+      <section ref={galleryRef} className="relative py-20 sm:py-28 bg-[#F5EFE6]/80 backdrop-blur-sm border-y border-[#D4AF37]/20 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -346,6 +341,7 @@ export default function OurLegacyPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: idx * 0.1 }}
                 onClick={() => setLightboxIndex(idx)}
+                data-cursor="view"
                 className="relative rounded-[24px] overflow-hidden border border-[#D4AF37]/30 shadow-luxury group cursor-pointer break-inside-avoid bg-[#06241B]"
               >
                 {/* Image Container with Hover Zoom */}
@@ -391,7 +387,7 @@ export default function OurLegacyPage() {
       {/* ========================================================================= */}
       {/* SECTION 4 – CUSTOMER RATINGS PLACEHOLDER ("LOVED BY GENERATIONS")          */}
       {/* ========================================================================= */}
-      <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
+      <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
