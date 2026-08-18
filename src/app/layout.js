@@ -8,6 +8,8 @@ import { CartDrawer } from '../components/layout/CartDrawer';
 import { AuthModal } from '../components/auth/AuthModal';
 import { QuickSearchModal } from '../components/layout/QuickSearchModal';
 
+import CustomCursor from '../components/ui/CustomCursor';
+
 export default function RootLayout({ children }) {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
 
@@ -19,6 +21,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="bg-[#FAF7F2] text-[#1C2B26] min-h-screen flex flex-col antialiased">
+        <CustomCursor />
         <Navbar 
           onOpenSearch={() => setSearchModalOpen(true)}
         />
