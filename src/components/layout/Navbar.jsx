@@ -49,39 +49,65 @@ export const Navbar = ({ onOpenSearch }) => {
 
   return (
     <>
-      {/* Top Banner: Deep Forest Green with Gold Accents */}
+      {/* Top Utility Banner: Deep Forest Green with Gold Accents */}
       <div className="bg-[#06241B] border-b border-[#D4AF37]/20 text-[#FAF7F2] px-4 py-2 text-[11px] relative z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           
-          <div className="flex items-center space-x-3">
+          {/* Left Side: Clickable Store Location, Store Pickup Available & Operating Hours */}
+          <div className="flex items-center space-x-2.5 sm:space-x-4 flex-wrap">
+            
+            {/* 1. Clickable Store Location (Opens Google Maps) */}
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=Vindhyawasini+Tilkut+Bhandar+Gaya"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1.5 font-bold text-[#FAF7F2] hover:text-[#D4AF37] transition-all group"
+              title="Open Vindhyawasini Tilkut Bhandar in Google Maps"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[#D4AF37] group-hover:-translate-y-0.5 transition-transform shrink-0" />
+              <span className="uppercase tracking-wider">STORE LOCATION</span>
+            </a>
+
+            <span className="text-[#D4AF37]/30">|</span>
+
+            {/* 2. Store Pickup Available Notice */}
             <span className="flex items-center space-x-1.5 font-bold text-[#D4AF37]">
-              <MapPin className="w-3.5 h-3.5 text-[#D4AF37] animate-bounce" />
-              <span>City Limits Express Delivery</span>
+              <ShoppingBag className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+              <span className="uppercase tracking-wider">STORE PICKUP AVAILABLE</span>
             </span>
+
             <span className="hidden md:inline text-[#D4AF37]/30">|</span>
-            <span className="hidden md:flex items-center space-x-1 text-[#FAF7F2]/70">
-              <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Hours: {CITY_DELIVERY_RULES.storeTimings}</span>
+
+            {/* 3. Operating Hours */}
+            <span className="hidden md:flex items-center space-x-1.5 text-[#FAF7F2]/80 font-medium">
+              <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+              <span>HOURS: 7:00 AM – 10:00 PM</span>
             </span>
           </div>
 
-          <div className="flex items-center space-x-4">
+          {/* Right Side: WhatsApp Enquiry & Bulk Orders */}
+          <div className="flex items-center space-x-3.5 shrink-0">
+            
+            {/* WhatsApp Us Link */}
             <a 
               href={`https://wa.me/${CITY_DELIVERY_RULES.whatsAppOrderNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
+              className="flex items-center space-x-1.5 text-emerald-400 font-semibold hover:text-emerald-300 transition-colors"
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>WhatsApp Order</span>
+              <span>WhatsApp Us</span>
             </a>
             
+            <span className="text-[#D4AF37]/30">|</span>
+
+            {/* Bulk Orders Call Link */}
             <a 
               href={`tel:${CITY_DELIVERY_RULES.phoneSupport}`}
-              className="flex items-center space-x-1 text-[#F3E5AB] font-semibold hover:text-[#D4AF37] transition-colors"
+              className="flex items-center space-x-1.5 text-[#F3E5AB] font-semibold hover:text-[#D4AF37] transition-colors"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Bulk Orders</span>
+              <span>Bulk Orders</span>
             </a>
           </div>
 
@@ -266,3 +292,5 @@ export const Navbar = ({ onOpenSearch }) => {
     </>
   );
 };
+
+export default Navbar;
