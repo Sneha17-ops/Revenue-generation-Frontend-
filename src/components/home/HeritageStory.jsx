@@ -3,55 +3,30 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Crown, Sparkles, Heart, ShieldCheck, Award, ArrowRight } from 'lucide-react';
+import { Crown, Sparkles, Heart, ShieldCheck, ArrowRight } from 'lucide-react';
 import GradualBlur from '../ui/GradualBlur';
 
 export const HeritageStory = () => {
-  // Staggered entrance animation sequence
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 22, filter: 'blur(4px)' },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      filter: 'blur(0px)',
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
-    },
-  };
-
   const pillarItems = [
     {
       word: "TASTE",
       icon: Sparkles,
       desc: "Authentic Gaya Karigar Recipes",
-      accent: "from-[#D4AF37]/20 to-[#FAF7F2]"
     },
     {
       word: "TRUST",
       icon: ShieldCheck,
       desc: "100% Pure A2 Cow Desi Ghee",
-      accent: "from-[#0B3D2E]/10 to-[#FAF7F2]"
     },
     {
       word: "FAMILY",
       icon: Heart,
       desc: "Generations of Cherished Memories",
-      accent: "from-[#D4AF37]/20 to-[#FAF7F2]"
     }
   ];
 
   return (
-    <section className="relative py-16 sm:py-24 lg:py-28 bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden selection:bg-[#D4AF37]/30">
+    <section id="legacy-section" className="relative py-16 sm:py-24 lg:py-28 bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden selection:bg-[#D4AF37]/30 z-10">
       
       {/* Subtle Warm Background Light Gradients */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#F6F0E6]/70 to-[#FAF7F2] pointer-events-none" />
@@ -71,17 +46,17 @@ export const HeritageStory = () => {
         <line x1="60" y1="80" x2="100" y2="80" strokeWidth="0.5" />
       </svg>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
           {/* ========================================================================= */}
           {/* LEFT COLUMN: Owner's Original Photograph (Editorial Frame & Depth)       */}
           {/* ========================================================================= */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.94, y: 25 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0.9, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="lg:col-span-5 flex justify-center order-1"
           >
             <div className="relative w-full max-w-md mx-auto">
@@ -96,7 +71,7 @@ export const HeritageStory = () => {
                 className="relative bg-[#FFFFFF] p-3 sm:p-4 rounded-[30px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.16)] group transition-all duration-500"
               >
                 
-                {/* Photo Framing Container */}
+                {/* Photo Framing Container - Uncropped portrait */}
                 <div className="relative h-[380px] sm:h-[460px] lg:h-[500px] w-full rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#FAF7F2]">
                   <img 
                     src="/assets/Owner.png" 
@@ -105,16 +80,16 @@ export const HeritageStory = () => {
                   />
                   
                   {/* Subtle Gradient Shadow Base */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/80 via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent opacity-85 pointer-events-none" />
 
                   {/* Top Heritage Badge */}
-                  <div className="absolute top-4 left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5">
+                  <div className="absolute top-4 left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5 z-10">
                     <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
                     <span>Est. 1995 • Gaya Heritage</span>
                   </div>
 
                   {/* Bottom Owner Caption Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 p-3 sm:p-4 bg-[#06241B]/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/40 text-[#FAF7F2] space-y-1">
+                  <div className="absolute bottom-4 left-4 right-4 p-3 sm:p-4 bg-[#06241B]/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/40 text-[#FAF7F2] space-y-1 z-10">
                     <h3 className="font-serif-luxury text-base sm:text-lg font-bold text-[#F3E5AB]">
                       Founder's Vision & Heritage
                     </h3>
@@ -135,61 +110,52 @@ export const HeritageStory = () => {
           {/* RIGHT COLUMN: Legacy Narrative, Quote & Three Highlighted Pillars         */}
           {/* ========================================================================= */}
           <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            initial={{ opacity: 0.9, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left order-2"
           >
             
             {/* 1. Eyebrow */}
-            <motion.div variants={itemVariants}>
+            <div>
               <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.25em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs">
                 <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>OUR LEGACY</span>
               </div>
-            </motion.div>
+            </div>
 
             {/* 2. Main Heading */}
-            <motion.div variants={itemVariants} className="space-y-1">
+            <div className="space-y-1">
               <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-[1.12]">
                 More Than A Sweet. <br />
                 <span className="gold-text-gradient font-cinzel block mt-1">
                   A Family Tradition.
                 </span>
               </h2>
-            </motion.div>
+            </div>
 
             {/* Decorative Gold Divider */}
-            <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start space-x-3 py-1">
+            <div className="flex items-center justify-center lg:justify-start space-x-3 py-1">
               <div className="h-[1.5px] w-12 bg-[#D4AF37]" />
               <div className="w-2 h-2 rounded-full bg-[#D4AF37] rotate-45" />
               <div className="h-[1.5px] w-24 bg-[#D4AF37]/40" />
-            </motion.div>
+            </div>
 
             {/* 3. Quote Message */}
-            <motion.div 
-              variants={itemVariants}
-              className="p-5 sm:p-6 bg-[#FFFFFF] rounded-2xl sm:rounded-3xl border-l-4 border-[#D4AF37] border-y border-r border-[#D4AF37]/25 shadow-xs relative max-w-2xl mx-auto lg:mx-0 text-left"
-            >
+            <div className="p-5 sm:p-6 bg-[#FFFFFF] rounded-2xl sm:rounded-3xl border-l-4 border-[#D4AF37] border-y border-r border-[#D4AF37]/25 shadow-xs relative max-w-2xl mx-auto lg:mx-0 text-left">
               <p className="font-serif-luxury text-lg sm:text-xl font-bold text-[#0B3D2E] italic leading-snug">
                 "A family's taste becomes a tradition when every generation can trust it."
               </p>
-            </motion.div>
+            </div>
 
             {/* 4. Narrative Paragraph */}
-            <motion.p 
-              variants={itemVariants}
-              className="text-[#0B3D2E]/85 text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0"
-            >
+            <p className="text-[#0B3D2E]/85 text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
               For us, every sweet carries more than flavour. It carries the warmth of family, the trust of generations, and the taste of memories made together. Handcrafted daily in pure A2 Cow Desi Ghee using time-honored artisanal methods.
-            </motion.p>
+            </p>
 
             {/* 5. Three Highlighted Words: TASTE • TRUST • FAMILY */}
-            <motion.div 
-              variants={itemVariants}
-              className="grid grid-cols-3 gap-2.5 sm:gap-4 pt-2 max-w-2xl mx-auto lg:mx-0"
-            >
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-4 pt-2 max-w-2xl mx-auto lg:mx-0">
               {pillarItems.map((pillar, idx) => {
                 const IconComponent = pillar.icon;
                 return (
@@ -207,10 +173,10 @@ export const HeritageStory = () => {
                   </div>
                 );
               })}
-            </motion.div>
+            </div>
 
             {/* CTA Button */}
-            <motion.div variants={itemVariants} className="pt-2">
+            <div className="pt-2">
               <Link 
                 href="/journey" 
                 className="gold-btn inline-flex items-center space-x-2 px-7 py-3.5 rounded-2xl text-xs font-bold shadow-gold-glow uppercase tracking-wider"
@@ -218,7 +184,7 @@ export const HeritageStory = () => {
                 <span>EXPLORE OUR FULL JOURNEY</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </motion.div>
+            </div>
 
           </motion.div>
 
@@ -229,7 +195,7 @@ export const HeritageStory = () => {
       <GradualBlur
         target="parent"
         position="bottom"
-        height="6rem"
+        height="5rem"
         strength={2}
         divCount={5}
         curve="bezier"

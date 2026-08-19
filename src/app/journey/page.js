@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import HeritageBackground from '../../components/ui/HeritageBackground';
 import CustomCursor from '../../components/ui/CustomCursor';
+import GradualBlur from '../../components/ui/GradualBlur';
 
 export default function OurLegacyPage() {
   const videoRef = useRef(null);
@@ -212,7 +213,8 @@ export default function OurLegacyPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2 – LOGO REVEAL & ABOUT OUR LEGACY                                */}
+      {/* ========================================================================= */}
+      {/* SECTION 2 – OWNER PHOTO & ABOUT OUR LEGACY                                */}
       {/* ========================================================================= */}
       <section ref={aboutRef} className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10">
         
@@ -224,69 +226,128 @@ export default function OurLegacyPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Left Column: Animated Logo Emblem with Floating Animation & Soft Golden Glow */}
+          {/* Left Column: Owner Photograph with Soft Rounded Corners, Gold Rim & Shadow */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.85, y: 30 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0.9, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex justify-center"
             data-cursor="card"
           >
-            <div className="relative">
+            <div className="relative w-full max-w-md">
               {/* Radial Golden Background Glow */}
-              <div className="absolute inset-0 bg-[#D4AF37]/25 rounded-3xl blur-[70px] pointer-events-none" />
+              <div className="absolute -inset-4 rounded-[40px] bg-gradient-to-tr from-[#D4AF37]/30 via-[#F3E5AB]/20 to-transparent blur-2xl opacity-70 pointer-events-none" />
 
-              {/* Floating Uncropped Container Frame */}
+              {/* Framing Container */}
               <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
-                className="relative w-72 sm:w-96 p-4 rounded-[28px] bg-gradient-to-tr from-[#06241B] via-[#0B3D2E] to-[#135440] border-2 border-[#D4AF37] shadow-[0_0_40px_rgba(212,175,55,0.45)] flex items-center justify-center group cursor-pointer"
+                whileHover={{ scale: 1.02, rotate: -0.4 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="relative bg-[#FFFFFF] p-3 sm:p-4 rounded-[30px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.18)] group transition-all duration-500"
               >
-                <img 
-                  src="/assets/MP8.jpeg" 
-                  alt="VINDHYAWASINI TILKUT BHANDAR Royal Heritage Logo" 
-                  className="w-full h-auto max-h-80 object-contain rounded-2xl group-hover:scale-105 transition-transform duration-700 filter drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
-                />
+                <div className="relative h-[380px] sm:h-[460px] lg:h-[480px] w-full rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#FAF7F2]">
+                  <img 
+                    src="/assets/Owner.png" 
+                    alt="Founder & Owner - Vindhyawasini Tilkut Bhandar" 
+                    className="w-full h-full object-cover object-top group-hover:scale-104 transition-transform duration-700 ease-out"
+                  />
+
+                  {/* Dark Shadow Gradient Base */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent opacity-85 pointer-events-none" />
+
+                  {/* Top Badge */}
+                  <div className="absolute top-4 left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5 z-10">
+                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Est. 1995 • Founder Heritage</span>
+                  </div>
+
+                  {/* Bottom Owner Caption Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 p-3 sm:p-4 bg-[#06241B]/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/40 text-[#FAF7F2] space-y-1 z-10">
+                    <h3 className="font-serif-luxury text-base sm:text-lg font-bold text-[#F3E5AB]">
+                      Founder's Vision & Heritage
+                    </h3>
+                    <p className="text-[11px] text-[#FAF7F2]/80 font-light leading-tight">
+                      30+ years of uncompromised authenticity, purity, and family devotion in Gaya sweets.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="absolute -inset-1 rounded-[38px] border border-[#D4AF37]/25 pointer-events-none" />
               </motion.div>
             </div>
           </motion.div>
 
-          {/* Right Column: About Narrative, Highlighted Quote, and Action Buttons */}
+          {/* Right Column: Narrative, Quote Message, and Three Highlighted Words */}
           <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, delay: 0.2 }}
+            initial={{ opacity: 0.9, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
             <div className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.3em] font-bold text-[#D4AF37] bg-[#0B3D2E] px-4 py-1.5 rounded-full border border-[#D4AF37]/30 inline-block">
-                FAMILY • TRADITION • HERITAGE • TRUST
+              <span className="text-xs uppercase tracking-[0.25em] font-bold text-[#0B3D2E] bg-[#FFFFFF] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 inline-block shadow-xs">
+                OUR LEGACY
               </span>
-              <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#0B3D2E] leading-tight">
-                Crafting Authentic Bihari Sweets Since 1995
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-tight">
+                More Than A Sweet. <br />
+                <span className="gold-text-gradient font-cinzel block mt-1">
+                  A Family Tradition.
+                </span>
               </h2>
             </div>
 
-            <div className="space-y-4 text-[#0B3D2E]/85 text-base leading-relaxed font-normal">
-              <p>
-                For over 30 years, <strong>VINDHYAWASINI TILKUT BHANDAR</strong> has been the gold standard of authentic Bihari confectionery. Handcrafted in Gaya with 100% pure A2 cow ghee, premium sesame seeds, and traditional wood-fired hand-pounding methods, every sweet carries the warmth of family heritage and artisanal perfection.
-              </p>
-              <p>
-                From festive celebrations to everyday family moments, our recipes remain unchanged, preserving the authentic taste of Gaya loved across generations.
+            {/* Decorative Gold Line */}
+            <div className="flex items-center justify-center lg:justify-start space-x-3 py-1">
+              <div className="h-[1.5px] w-12 bg-[#D4AF37]" />
+              <div className="w-2 h-2 rounded-full bg-[#D4AF37] rotate-45" />
+              <div className="h-[1.5px] w-24 bg-[#D4AF37]/40" />
+            </div>
+
+            {/* Animated Quote Message */}
+            <div className="p-5 sm:p-6 bg-[#FFFFFF] rounded-2xl sm:rounded-3xl border-l-4 border-[#D4AF37] border-y border-r border-[#D4AF37]/25 shadow-xs relative max-w-2xl mx-auto lg:mx-0 text-left" data-cursor="card">
+              <Quote className="w-6 h-6 text-[#D4AF37]/40 absolute top-4 right-4" />
+              <p className="font-serif-luxury text-lg sm:text-xl font-bold text-[#0B3D2E] italic leading-snug">
+                "A family's taste becomes a tradition when every generation can trust it."
               </p>
             </div>
 
-            {/* Premium Highlighted Quote Card */}
-            <div className="p-6 bg-[#FFFFFF]/90 backdrop-blur-md rounded-2xl border-l-4 border-[#D4AF37] shadow-luxury space-y-2 my-4 relative overflow-hidden" data-cursor="card">
-              <Quote className="w-8 h-8 text-[#D4AF37]/30 absolute top-3 right-3" />
-              <p className="font-heading text-xl sm:text-2xl font-bold text-[#0B3D2E] italic">
-                "Every Bite Carries a Legacy."
-              </p>
-              <span className="text-xs text-[#997D20] font-semibold tracking-wider uppercase block">
-                — Vindhyawasini Family Promise
-              </span>
+            {/* Paragraph */}
+            <p className="text-[#0B3D2E]/85 text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0">
+              For us, every sweet carries more than flavour. It carries the warmth of family, the trust of generations, and the taste of memories made together. Handcrafted daily in pure A2 Cow Desi Ghee using time-honored artisanal methods.
+            </p>
+
+            {/* Three Highlighted Words: TASTE • TRUST • FAMILY */}
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-4 pt-2 max-w-2xl mx-auto lg:mx-0">
+              <div className="p-3 sm:p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/35 shadow-xs text-center space-y-1 hover:border-[#D4AF37] transition-colors">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4AF37] mx-auto" />
+                <span className="font-cinzel text-xs sm:text-sm font-black text-[#0B3D2E] tracking-widest block">
+                  TASTE
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-[#0B3D2E]/70 font-medium block line-clamp-1">
+                  Authentic Gaya Karigar Recipes
+                </span>
+              </div>
+
+              <div className="p-3 sm:p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/35 shadow-xs text-center space-y-1 hover:border-[#D4AF37] transition-colors">
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4AF37] mx-auto" />
+                <span className="font-cinzel text-xs sm:text-sm font-black text-[#0B3D2E] tracking-widest block">
+                  TRUST
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-[#0B3D2E]/70 font-medium block line-clamp-1">
+                  100% Pure A2 Cow Desi Ghee
+                </span>
+              </div>
+
+              <div className="p-3 sm:p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/35 shadow-xs text-center space-y-1 hover:border-[#D4AF37] transition-colors">
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4AF37] mx-auto" />
+                <span className="font-cinzel text-xs sm:text-sm font-black text-[#0B3D2E] tracking-widest block">
+                  FAMILY
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-[#0B3D2E]/70 font-medium block line-clamp-1">
+                  Generations of Cherished Memories
+                </span>
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -311,6 +372,18 @@ export default function OurLegacyPage() {
           </motion.div>
 
         </div>
+
+        {/* GradualBlur Component */}
+        <GradualBlur
+          target="parent"
+          position="bottom"
+          height="5rem"
+          strength={2}
+          divCount={5}
+          curve="bezier"
+          exponential
+          opacity={1}
+        />
       </section>
 
       {/* ========================================================================= */}
