@@ -4,7 +4,6 @@ import React from 'react';
 import { Hero } from '../components/home/Hero';
 import { CategoryShowcase } from '../components/home/CategoryShowcase';
 import { BestSellers } from '../components/home/BestSellers';
-import { HeritageStory } from '../components/home/HeritageStory';
 import { WhyChooseUs } from '../components/home/WhyChooseUs';
 import { TestimonialsMarquee } from '../components/home/TestimonialsMarquee';
 import { 
@@ -61,17 +60,12 @@ export default function HomePage() {
 
         <SectionDivider />
 
-        {/* 8. Heritage Story */}
-        <HeritageStory />
-
-        <SectionDivider />
-
-        {/* 9. Testimonials */}
+        {/* 8. Testimonials */}
         <TestimonialsMarquee />
 
         <SectionDivider />
 
-        {/* 10. FAQ Section */}
+        {/* 9. FAQ Section */}
         <FAQSection />
 
       </div>
