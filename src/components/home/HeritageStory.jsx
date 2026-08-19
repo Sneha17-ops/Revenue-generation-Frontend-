@@ -3,81 +3,240 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ShieldCheck, MapPin, Crown, Sparkles } from 'lucide-react';
+import { Crown, Sparkles, Heart, ShieldCheck, Award, ArrowRight } from 'lucide-react';
+import GradualBlur from '../ui/GradualBlur';
 
 export const HeritageStory = () => {
+  // Staggered entrance animation sequence
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 22, filter: 'blur(4px)' },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)',
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
+    },
+  };
+
+  const pillarItems = [
+    {
+      word: "TASTE",
+      icon: Sparkles,
+      desc: "Authentic Gaya Karigar Recipes",
+      accent: "from-[#D4AF37]/20 to-[#FAF7F2]"
+    },
+    {
+      word: "TRUST",
+      icon: ShieldCheck,
+      desc: "100% Pure A2 Cow Desi Ghee",
+      accent: "from-[#0B3D2E]/10 to-[#FAF7F2]"
+    },
+    {
+      word: "FAMILY",
+      icon: Heart,
+      desc: "Generations of Cherished Memories",
+      accent: "from-[#D4AF37]/20 to-[#FAF7F2]"
+    }
+  ];
+
   return (
-    <section className="py-24 bg-[#F5EFE6] text-[#0B3D2E] relative overflow-hidden">
+    <section className="relative py-16 sm:py-24 lg:py-28 bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden selection:bg-[#D4AF37]/30">
+      
+      {/* Subtle Warm Background Light Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#F6F0E6]/70 to-[#FAF7F2] pointer-events-none" />
+      
+      {/* Indian Ornamental Line-Art Corner Elements */}
+      <svg className="absolute top-6 left-6 w-32 h-32 text-[#D4AF37]/20 pointer-events-none select-none hidden sm:block" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
+        <circle cx="20" cy="20" r="16" strokeDasharray="2 3" />
+        <path d="M 20,4 C 28,12 28,28 20,36 C 12,28 12,12 20,4 Z" fill="currentColor" fillOpacity="0.06" />
+        <line x1="20" y1="0" x2="20" y2="40" strokeWidth="0.5" />
+        <line x1="0" y1="20" x2="40" y2="20" strokeWidth="0.5" />
+      </svg>
+
+      <svg className="absolute bottom-12 right-6 w-36 h-36 text-[#D4AF37]/20 pointer-events-none select-none hidden sm:block" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
+        <circle cx="80" cy="80" r="16" strokeDasharray="2 3" />
+        <path d="M 80,64 C 88,72 88,88 80,96 C 72,88 72,72 80,64 Z" fill="currentColor" fillOpacity="0.06" />
+        <line x1="80" y1="60" x2="80" y2="100" strokeWidth="0.5" />
+        <line x1="60" y1="80" x2="100" y2="80" strokeWidth="0.5" />
+      </svg>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
+          {/* ========================================================================= */}
+          {/* LEFT COLUMN: Owner's Original Photograph (Editorial Frame & Depth)       */}
+          {/* ========================================================================= */}
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.94, y: 25 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-6 space-y-6"
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 flex justify-center order-1"
           >
-            <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.2em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs">
-              <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Centuries of Culinary Craft</span>
-            </div>
+            <div className="relative w-full max-w-md mx-auto">
+              
+              {/* Radial Antique Gold Backlight Glow */}
+              <div className="absolute -inset-4 rounded-[40px] bg-gradient-to-tr from-[#D4AF37]/25 via-[#F3E5AB]/20 to-transparent blur-2xl opacity-70 pointer-events-none" />
 
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-[#0B3D2E] leading-tight">
-              Preserving the <span className="gold-text-gradient font-cinzel">Heritage of Bihar</span> Since 1995
-            </h2>
+              {/* Main Photo Card Container */}
+              <motion.div 
+                whileHover={{ scale: 1.02, rotate: -0.4 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="relative bg-[#FFFFFF] p-3 sm:p-4 rounded-[30px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.16)] group transition-all duration-500"
+              >
+                
+                {/* Photo Framing Container */}
+                <div className="relative h-[380px] sm:h-[460px] lg:h-[500px] w-full rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#FAF7F2]">
+                  <img 
+                    src="/assets/Owner.png" 
+                    alt="Founder & Owner - Vindhyawasini Tilkut Bhandar" 
+                    className="w-full h-full object-cover object-top group-hover:scale-104 transition-transform duration-700 ease-out"
+                  />
+                  
+                  {/* Subtle Gradient Shadow Base */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/80 via-transparent to-transparent opacity-80" />
 
-            <p className="text-[#0B3D2E]/80 text-sm sm:text-base leading-relaxed font-light">
-              <span className="font-semibold text-[#0B3D2E]">VINDHYAWASINI TILKUT BHANDAR</span> was founded with a singular mission: to serve authentic Bihari sweets prepared exactly as our forefathers made them. From hand-pounding white sesame in wooden mortars for Gaya Tilkut to creating 64 delicate flaky layers for Silao Khaja, every box reflects royal Bihari culture.
-            </p>
+                  {/* Top Heritage Badge */}
+                  <div className="absolute top-4 left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5">
+                    <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <span>Est. 1995 • Gaya Heritage</span>
+                  </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/30 space-y-1.5 shadow-xs">
-                <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
-                <h4 className="font-bold text-xs text-[#0B3D2E]">100% A2 Cow Ghee</h4>
-                <p className="text-[11px] text-[#0B3D2E]/70 font-light">Pure clarified butter without artificial additives</p>
-              </div>
+                  {/* Bottom Owner Caption Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 p-3 sm:p-4 bg-[#06241B]/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/40 text-[#FAF7F2] space-y-1">
+                    <h3 className="font-serif-luxury text-base sm:text-lg font-bold text-[#F3E5AB]">
+                      Founder's Vision & Heritage
+                    </h3>
+                    <p className="text-[11px] text-[#FAF7F2]/80 font-light leading-tight">
+                      30+ years of uncompromised authenticity, purity, and family devotion in Gaya sweets.
+                    </p>
+                  </div>
+                </div>
 
-              <div className="p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/30 space-y-1.5 shadow-xs">
-                <MapPin className="w-5 h-5 text-[#D4AF37]" />
-                <h4 className="font-bold text-xs text-[#0B3D2E]">Gaya & Silao Origin</h4>
-                <p className="text-[11px] text-[#0B3D2E]/70 font-light">Authentic regional masters and karigars</p>
-              </div>
-            </div>
+                {/* Outer Decorative Gold Rim Line */}
+                <div className="absolute -inset-1 rounded-[38px] border border-[#D4AF37]/25 pointer-events-none" />
 
-            <div className="pt-2">
-              <Link href="/about" className="gold-btn px-7 py-3.5 rounded-2xl text-xs font-bold inline-block shadow-gold-glow uppercase tracking-wider">
-                Read Our Full Heritage Story
-              </Link>
+              </motion.div>
             </div>
           </motion.div>
 
+          {/* ========================================================================= */}
+          {/* RIGHT COLUMN: Legacy Narrative, Quote & Three Highlighted Pillars         */}
+          {/* ========================================================================= */}
           <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-6 relative"
+            className="lg:col-span-7 space-y-6 text-center lg:text-left order-2"
           >
-            <div className="relative rounded-[32px] overflow-hidden border-2 border-[#D4AF37]/45 shadow-[0_25px_50px_-12px_rgba(11,61,46,0.15)] bg-white p-3 group">
-              <div className="relative h-[420px] rounded-[24px] overflow-hidden">
-                <img 
-                  src="/assets/MP6.jpeg" 
-                  alt="VINDHYAWASINI TILKUT BHANDAR Karigar Preparation" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent" />
-                
-                <div className="absolute bottom-5 left-5 right-5 p-4 bg-[#FFFFFF]/90 backdrop-blur-md rounded-2xl border border-[#D4AF37]/35 shadow-md">
-                  <span className="text-xs text-[#D4AF37] font-bold uppercase tracking-wider block">Artisanal Craftsmanship</span>
-                  <p className="text-xs text-[#0B3D2E] mt-1 font-medium">Prepared fresh daily by traditional karigars using organic ingredients.</p>
-                </div>
+            
+            {/* 1. Eyebrow */}
+            <motion.div variants={itemVariants}>
+              <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-[0.25em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs">
+                <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>OUR LEGACY</span>
               </div>
-            </div>
+            </motion.div>
+
+            {/* 2. Main Heading */}
+            <motion.div variants={itemVariants} className="space-y-1">
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-[1.12]">
+                More Than A Sweet. <br />
+                <span className="gold-text-gradient font-cinzel block mt-1">
+                  A Family Tradition.
+                </span>
+              </h2>
+            </motion.div>
+
+            {/* Decorative Gold Divider */}
+            <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start space-x-3 py-1">
+              <div className="h-[1.5px] w-12 bg-[#D4AF37]" />
+              <div className="w-2 h-2 rounded-full bg-[#D4AF37] rotate-45" />
+              <div className="h-[1.5px] w-24 bg-[#D4AF37]/40" />
+            </motion.div>
+
+            {/* 3. Quote Message */}
+            <motion.div 
+              variants={itemVariants}
+              className="p-5 sm:p-6 bg-[#FFFFFF] rounded-2xl sm:rounded-3xl border-l-4 border-[#D4AF37] border-y border-r border-[#D4AF37]/25 shadow-xs relative max-w-2xl mx-auto lg:mx-0 text-left"
+            >
+              <p className="font-serif-luxury text-lg sm:text-xl font-bold text-[#0B3D2E] italic leading-snug">
+                "A family's taste becomes a tradition when every generation can trust it."
+              </p>
+            </motion.div>
+
+            {/* 4. Narrative Paragraph */}
+            <motion.p 
+              variants={itemVariants}
+              className="text-[#0B3D2E]/85 text-sm sm:text-base leading-relaxed font-normal max-w-2xl mx-auto lg:mx-0"
+            >
+              For us, every sweet carries more than flavour. It carries the warmth of family, the trust of generations, and the taste of memories made together. Handcrafted daily in pure A2 Cow Desi Ghee using time-honored artisanal methods.
+            </motion.p>
+
+            {/* 5. Three Highlighted Words: TASTE • TRUST • FAMILY */}
+            <motion.div 
+              variants={itemVariants}
+              className="grid grid-cols-3 gap-2.5 sm:gap-4 pt-2 max-w-2xl mx-auto lg:mx-0"
+            >
+              {pillarItems.map((pillar, idx) => {
+                const IconComponent = pillar.icon;
+                return (
+                  <div 
+                    key={idx}
+                    className="p-3 sm:p-4 bg-[#FFFFFF] rounded-2xl border border-[#D4AF37]/35 shadow-xs text-center space-y-1 hover:border-[#D4AF37] transition-colors"
+                  >
+                    <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4AF37] mx-auto" />
+                    <span className="font-cinzel text-xs sm:text-sm font-black text-[#0B3D2E] tracking-widest block">
+                      {pillar.word}
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] text-[#0B3D2E]/70 font-medium block line-clamp-1">
+                      {pillar.desc}
+                    </span>
+                  </div>
+                );
+              })}
+            </motion.div>
+
+            {/* CTA Button */}
+            <motion.div variants={itemVariants} className="pt-2">
+              <Link 
+                href="/journey" 
+                className="gold-btn inline-flex items-center space-x-2 px-7 py-3.5 rounded-2xl text-xs font-bold shadow-gold-glow uppercase tracking-wider"
+              >
+                <span>EXPLORE OUR FULL JOURNEY</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
           </motion.div>
 
         </div>
       </div>
+
+      {/* React Bits GradualBlur Component (Bottom Section Edge Transition) */}
+      <GradualBlur
+        target="parent"
+        position="bottom"
+        height="6rem"
+        strength={2}
+        divCount={5}
+        curve="bezier"
+        exponential
+        opacity={1}
+      />
+
     </section>
   );
 };
