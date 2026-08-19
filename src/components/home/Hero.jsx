@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, Crown, Flame, Sparkles, MessageSquare } from 'lucide-react';
 import { CITY_DELIVERY_RULES } from '../../data/products';
 import BlurText from '../ui/BlurText';
@@ -13,41 +13,15 @@ const MoltenMetal = dynamic(() => import('../ui/MoltenMetal'), { ssr: false });
 
 export const Hero = () => {
   const [isDesktop, setIsDesktop] = useState(false);
-  const cardRef = useRef(null);
-
-  // Parallax motion values for desktop interaction
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { stiffness: 120, damping: 18 };
-  const mouseXSpring = useSpring(mouseX, springConfig);
-  const mouseYSpring = useSpring(mouseY, springConfig);
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['4deg', '-4deg']);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-4deg', '4deg']);
 
   useEffect(() => {
     const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 768 && !window.matchMedia('(pointer: coarse)').matches);
+      setIsDesktop(window.innerWidth >= 768);
     };
     checkDesktop();
     window.addEventListener('resize', checkDesktop);
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
-
-  const handleMouseMove = (e) => {
-    if (!isDesktop || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(xPct);
-    mouseY.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   // Staggered motion variants for smooth premium entrance
   const containerVariants = {
@@ -55,7 +29,7 @@ export const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
+        staggerChildren: 0.14,
         delayChildren: 0.05,
       },
     },
@@ -65,7 +39,7 @@ export const Hero = () => {
     hidden: { 
       opacity: 0, 
       y: 18, 
-      filter: 'blur(3px)' 
+      filter: 'blur(4px)' 
     },
     visible: { 
       opacity: 1, 
@@ -79,15 +53,15 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-fit lg:min-h-[92vh] bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden flex items-center py-8 sm:py-12 lg:py-20 z-10 selection:bg-[#D4AF37]/30">
+    <section className="relative min-h-fit lg:min-h-[92vh] bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden flex items-center py-10 sm:py-14 lg:py-20 z-10 selection:bg-[#D4AF37]/30">
       
       {/* 1. Subtle Warm Ivory Light Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#F6F0E6]/80 to-[#FAF7F2] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#F6F0E6]/70 to-[#FAF7F2] pointer-events-none" />
       <div className="absolute top-[-10%] right-[-5%] w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-gradient-radial from-[#D4AF37]/12 via-[#FAF7F2]/0 to-transparent blur-[100px] sm:blur-[140px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-5%] w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-gradient-radial from-[#C5A059]/10 via-[#FAF7F2]/0 to-transparent blur-[90px] sm:blur-[130px] pointer-events-none" />
 
       {/* 2. Fine Indian Line-Art Decorative Edges */}
-      <svg className="absolute top-4 left-4 sm:top-6 sm:left-6 w-24 sm:w-36 h-24 sm:h-36 text-[#D4AF37]/25 pointer-events-none select-none hidden sm:block" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
+      <svg className="absolute top-4 left-4 sm:top-6 sm:left-6 w-24 sm:w-36 h-24 sm:h-36 text-[#D4AF37]/25 pointer-events-none select-none" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
         <circle cx="20" cy="20" r="16" strokeDasharray="2 3" />
         <path d="M 20,4 C 28,12 28,28 20,36 C 12,28 12,12 20,4 Z" fill="currentColor" fillOpacity="0.08" />
         <path d="M 4,20 C 12,28 28,28 36,20 C 28,12 12,12 4,20 Z" fill="currentColor" fillOpacity="0.08" />
@@ -95,7 +69,7 @@ export const Hero = () => {
         <line x1="0" y1="20" x2="40" y2="20" strokeWidth="0.5" />
       </svg>
 
-      <svg className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-32 sm:w-48 h-32 sm:h-48 text-[#D4AF37]/20 pointer-events-none select-none hidden sm:block" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="0.8">
+      <svg className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-32 sm:w-48 h-32 sm:h-48 text-[#D4AF37]/20 pointer-events-none select-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="0.8">
         <path d="M 100,10 L 125,50 L 115,50 L 135,90 L 125,90 L 150,140 L 50,140 L 75,90 L 65,90 L 85,50 L 75,50 Z" fill="currentColor" fillOpacity="0.04" />
         <line x1="100" y1="140" x2="100" y2="190" strokeWidth="1.2" strokeDasharray="3 3" />
         <circle cx="100" cy="165" r="16" />
@@ -103,10 +77,10 @@ export const Hero = () => {
       </svg>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-14 items-center">
           
           {/* ========================================================================= */}
-          {/* LEFT COLUMN: Editorial Typography & Call to Actions                      */}
+          {/* LEFT COLUMN: Editorial Typography, Story Headline & Actions              */}
           {/* ========================================================================= */}
           <motion.div 
             variants={containerVariants}
@@ -115,43 +89,43 @@ export const Hero = () => {
             className="lg:col-span-7 space-y-6 sm:space-y-7 text-center lg:text-left relative z-20"
           >
             
-            {/* 1. Prepared Fresh Daily Badge */}
+            {/* 1. Heritage Prepared Fresh Daily Badge */}
             <motion.div variants={itemVariants}>
-              <div className="inline-flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.2em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#D4AF37]/40 shadow-[0_4px_16px_rgba(212,175,55,0.12)] max-w-full flex-wrap justify-center">
-                <span className="flex items-center space-x-1 sm:space-x-1.5 text-[#D4AF37]">
-                  <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-pulse" />
-                  <span className="text-[#0B3D2E] font-semibold">PREPARED FRESH DAILY</span>
+              <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-4 py-1.5 sm:py-2 rounded-full border border-[#D4AF37]/40 shadow-xs max-w-full flex-wrap justify-center">
+                <span className="flex items-center space-x-1.5 text-[#D4AF37]">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span className="text-[#0B3D2E] font-bold">PREPARED FRESH DAILY</span>
                 </span>
                 <span className="text-[#D4AF37]">•</span>
                 <span className="text-[#0B3D2E]/80 font-medium">AUTHENTIC GAYA SWEETS</span>
               </div>
             </motion.div>
 
-            {/* 2. Main Heading: "Today's Fresh" followed by "Hot Confections" */}
-            <div className="space-y-1">
-              <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.08] sm:leading-[1.06] tracking-tight text-[#0B3D2E]">
+            {/* 2. Main Editorial Hero Heading with BlurText Animations */}
+            <motion.div variants={itemVariants} className="space-y-1.5">
+              <h1 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-[1.12] tracking-tight">
                 <BlurText 
-                  text="Today's Fresh" 
+                  text="From the Heart of Gaya" 
                   animateBy="words" 
                   direction="top" 
-                  delay={100} 
-                  className="text-[#0B3D2E] block"
+                  delay={110} 
+                  className="text-[#0B3D2E] block italic"
                 />
                 <BlurText 
-                  text="Hot Confections" 
+                  text="A Taste Passed Through Generations" 
                   animateBy="words" 
                   direction="bottom" 
                   delay={120} 
-                  className="gold-text-gradient font-cinzel text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black block mt-1"
+                  className="gold-text-gradient font-cinzel block mt-1.5 text-2xl sm:text-4xl lg:text-5xl font-extrabold not-italic"
                 />
               </h1>
-            </div>
 
-            {/* Decorative Gold Divider Line */}
-            <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start space-x-3 py-1">
-              <div className="h-[1.5px] w-12 bg-[#D4AF37]" />
-              <div className="w-2 h-2 rounded-full bg-[#D4AF37] rotate-45" />
-              <div className="h-[1.5px] w-24 bg-[#D4AF37]/40" />
+              {/* Decorative Gold Line with Center Lotus/Diamond Ornament */}
+              <div className="flex items-center justify-center lg:justify-start space-x-3 pt-3 pb-1">
+                <div className="h-[1.5px] w-12 bg-[#D4AF37]" />
+                <div className="w-2 h-2 rounded-full bg-[#D4AF37] rotate-45" />
+                <div className="h-[1.5px] w-28 bg-[#D4AF37]/40" />
+              </div>
             </motion.div>
 
             {/* 3. Supporting Description Text */}
@@ -159,7 +133,7 @@ export const Hero = () => {
               variants={itemVariants}
               className="text-[#0B3D2E]/85 text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed font-normal mx-auto lg:mx-0 px-2 sm:px-0"
             >
-              Where every sweet carries the warmth of family, the trust of generations, and the authentic taste of Gaya. Handcrafted daily in 100% pure A2 Cow Desi Ghee.
+              Where every sweet carries the warmth of family, the trust of generations, and the authentic taste of Gaya. Handcrafted daily in 100% pure A2 Cow Desi Ghee using traditional karigar recipes.
             </motion.p>
 
             {/* 4. CTA Buttons */}
@@ -170,7 +144,7 @@ export const Hero = () => {
               {/* Primary CTA */}
               <Link 
                 href="/shop" 
-                className="gold-btn w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2.5 sm:space-x-3 shadow-gold-glow group transition-all duration-300"
+                className="gold-btn w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2.5 shadow-gold-glow group transition-all duration-300"
               >
                 <span className="uppercase tracking-wider">EXPLORE FRESH COLLECTION</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -179,7 +153,7 @@ export const Hero = () => {
               {/* Secondary CTA */}
               <Link 
                 href="/shop?sort=todaysFresh"
-                className="forest-btn w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 transition-all duration-300"
+                className="forest-btn w-full sm:w-auto px-6 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 transition-all duration-300"
               >
                 <Flame className="w-4 h-4 text-[#D4AF37]" />
                 <span className="uppercase tracking-wider">VIEW TODAY'S SPECIALS</span>
@@ -190,7 +164,7 @@ export const Hero = () => {
                 href={`https://wa.me/${CITY_DELIVERY_RULES.whatsAppOrderNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#FFFFFF] hover:bg-[#F5EFE6] text-[#0B3D2E] w-full sm:w-auto px-5 sm:px-6 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 border border-[#D4AF37]/35 shadow-sm hover:border-[#D4AF37] transition-all duration-300"
+                className="bg-[#FFFFFF] hover:bg-[#FAF7F2] text-[#0B3D2E] w-full sm:w-auto px-5 py-3.5 sm:py-4 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center space-x-2 border border-[#D4AF37]/40 shadow-xs hover:border-[#D4AF37] transition-all duration-300"
               >
                 <MessageSquare className="w-4 h-4 text-[#0B3D2E]" />
                 <span className="uppercase tracking-wider">WhatsApp</span>
@@ -203,15 +177,15 @@ export const Hero = () => {
               className="pt-6 sm:pt-8 border-t border-[#D4AF37]/25 grid grid-cols-3 gap-2 sm:gap-4 text-center sm:text-left max-w-xl mx-auto lg:mx-0"
             >
               <div>
-                <div className="font-cinzel text-base sm:text-xl lg:text-2xl font-bold text-[#0B3D2E]">City Limits</div>
+                <div className="font-cinzel text-base sm:text-xl font-bold text-[#0B3D2E]">City Limits</div>
                 <div className="text-[9px] sm:text-[11px] text-[#0B3D2E]/75 uppercase tracking-wider font-medium">Same-Day Delivery</div>
               </div>
               <div>
-                <div className="font-cinzel text-base sm:text-xl lg:text-2xl font-bold text-[#0B3D2E]">7 AM - 10 PM</div>
+                <div className="font-cinzel text-base sm:text-xl font-bold text-[#0B3D2E]">7 AM - 10 PM</div>
                 <div className="text-[9px] sm:text-[11px] text-[#0B3D2E]/75 uppercase tracking-wider font-medium">Fresh Daily Batch</div>
               </div>
               <div>
-                <div className="font-cinzel text-base sm:text-xl lg:text-2xl font-bold text-[#0B3D2E]">100% A2 Ghee</div>
+                <div className="font-cinzel text-base sm:text-xl font-bold text-[#0B3D2E]">100% A2 Ghee</div>
                 <div className="text-[9px] sm:text-[11px] text-[#0B3D2E]/75 uppercase tracking-wider font-medium">Pure Ingredients</div>
               </div>
             </motion.div>
@@ -219,7 +193,7 @@ export const Hero = () => {
           </motion.div>
 
           {/* ========================================================================= */}
-          {/* RIGHT COLUMN: Layered Editorial Sweet Image & Interactive Presentation    */}
+          {/* RIGHT COLUMN: Layered Editorial Sweet Composition & MoltenMetal Texture   */}
           {/* ========================================================================= */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.94, y: 24 }}
@@ -266,109 +240,100 @@ export const Hero = () => {
             {/* Ambient Backlight Glow Overlay */}
             <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-[#D4AF37]/20 via-[#F3E5AB]/15 to-transparent blur-2xl opacity-70 pointer-events-none z-0" />
 
-            {/* Micro Floating Gold Dust Particles */}
+            {/* Micro Floating Gold Particles */}
             <div className="absolute inset-0 pointer-events-none hidden sm:block z-10">
               <div className="absolute top-10 left-6 w-2 h-2 rounded-full bg-[#D4AF37] opacity-60 animate-ping" />
               <div className="absolute bottom-16 right-8 w-2.5 h-2.5 rounded-full bg-[#F3E5AB] opacity-70 animate-pulse" />
               <div className="absolute top-1/2 right-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-50" />
             </div>
 
-            {/* 6. Main Composition Showcase Card (FOREGROUND LAYERED FRAME) */}
-            <div 
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className="relative z-10 w-full max-w-[340px] sm:max-w-md perspective-1000"
+            {/* 6. Main Composition Showcase Card (FOREGROUND LAYERED EDITORIAL FRAME) */}
+            <motion.div 
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
+              className="relative z-10 w-full max-w-[340px] sm:max-w-md bg-[#FFFFFF] p-3.5 sm:p-5 rounded-[28px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.18)] group hover:border-[#D4AF37] hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.3)] transition-all duration-500"
             >
-              <motion.div 
-                style={{
-                  rotateX: isDesktop ? rotateX : 0,
-                  rotateY: isDesktop ? rotateY : 0,
-                  transformStyle: 'preserve-3d',
-                }}
-                className="relative bg-[#FFFFFF] p-3.5 sm:p-5 rounded-[28px] sm:rounded-[36px] border-2 border-[#D4AF37]/45 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.16)] group hover:border-[#D4AF37] transition-all duration-500"
-              >
+              
+              {/* Heritage Seal/Badge: "EST. 1995 • GAYA HERITAGE" */}
+              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-30 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
                 
-                {/* Refined Heritage Seal Badge with Rotating Decorative Ring */}
-                <div className="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 z-30 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
-                  {/* Rotating Ring */}
-                  <div className="absolute inset-1 rounded-full border border-dashed border-[#D4AF37]/70 animate-[spin_20s_linear_infinite] pointer-events-none" />
-                  
-                  {/* Static Seal Text */}
-                  <div className="relative z-10 flex flex-col items-center justify-center text-[#F3E5AB]">
-                    <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#D4AF37]" />
-                    <span className="text-[7px] sm:text-[8px] font-extrabold uppercase tracking-widest leading-tight">LEGACY</span>
-                    <span className="text-[8px] sm:text-[9px] font-black text-[#D4AF37]">1995</span>
-                  </div>
+                {/* Slow Rotating Outer Dash Circle */}
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 25, ease: "linear", repeat: Infinity }}
+                  className="absolute inset-1 rounded-full border border-dashed border-[#D4AF37]/60 pointer-events-none"
+                />
+
+                <div className="relative z-10 flex flex-col items-center justify-center text-[#F3E5AB]">
+                  <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#D4AF37]" />
+                  <span className="text-[7px] sm:text-[8px] font-extrabold uppercase tracking-widest leading-tight mt-0.5">LEGACY</span>
+                  <span className="text-[8px] sm:text-[9px] font-black text-[#D4AF37]">1995</span>
+                </div>
+              </div>
+
+              {/* Product Hero Image Frame */}
+              <div className="relative h-72 sm:h-80 md:h-[400px] rounded-[20px] sm:rounded-[28px] overflow-hidden bg-[#FAF7F2] shadow-inner">
+                <img 
+                  src="/assets/image.png" 
+                  alt="Authentic Gaya Sweets - Vindhyawasini Tilkut Bhandar" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent opacity-90 pointer-events-none" />
+
+                {/* Top Heritage Badge */}
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] font-bold text-[10px] sm:text-xs uppercase px-3 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5 z-10">
+                  <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                  <span className="tracking-wider">Gaya Heritage Special</span>
                 </div>
 
-                {/* Product Hero Image Container */}
-                <div className="relative h-72 sm:h-80 md:h-[420px] rounded-[20px] sm:rounded-[28px] overflow-hidden bg-[#FAF7F2] shadow-inner">
-                  <img 
-                    src="/assets/image.png" 
-                    alt="Authentic Gaya Sweets - Vindhyawasini Tilkut Bhandar" 
-                    className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700 ease-out"
-                  />
-                  
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent opacity-90 pointer-events-none" />
-
-                  {/* Top Badge */}
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#06241B] font-bold text-[10px] sm:text-xs uppercase px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5 z-10">
-                    <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-                    <span className="tracking-wider">Gaya Heritage Special</span>
+                {/* Floating Asymmetrical Product Tag 1: Top Right */}
+                <motion.div 
+                  animate={{ y: [0, 5, 0] }}
+                  transition={{ duration: 5, ease: "easeInOut", repeat: Infinity, delay: 0.3 }}
+                  className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/40 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[125px] sm:max-w-[150px] z-10"
+                >
+                  <img src="/assets/Khaja.png" alt="Silao Khaja" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover" />
+                  <div>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Silao Khaja</span>
+                    <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">64 Flaky Layers</span>
                   </div>
+                </motion.div>
 
-                  {/* Floating Product Callout Tag 1 (Top-Right) */}
-                  <motion.div 
-                    animate={{ y: [0, 5, 0] }}
-                    transition={{ duration: 5, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
-                    className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/50 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[125px] sm:max-w-[150px] z-10"
-                  >
-                    <img src="/assets/Khaja.png" alt="Silao Khaja" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover shrink-0" />
-                    <div>
-                      <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Silao Khaja</span>
-                      <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">64 Flaky Layers</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Floating Product Callout Tag 2 (Bottom-Left) */}
-                  <motion.div 
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 5.5, ease: "easeInOut", repeat: Infinity, delay: 1 }}
-                    className="absolute bottom-16 left-3 sm:bottom-20 sm:left-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/50 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[135px] sm:max-w-[160px] z-10"
-                  >
-                    <img src="/assets/Motichur Laddu.png" alt="Motichoor Laddu" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover shrink-0" />
-                    <div>
-                      <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Motichoor Laddu</span>
-                      <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">Pure A2 Cow Ghee</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Card Title & Info Overlay */}
-                  <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 right-3 sm:right-5 text-[#FAF7F2] space-y-0.5 sm:space-y-1 z-10">
-                    <h3 className="font-serif-luxury text-base sm:text-xl font-bold text-[#F3E5AB]">
-                      Authentic Gaya Gud Tilkut
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-[#FAF7F2]/80 font-light line-clamp-2">
-                      Hand-pounded white sesame & organic sugarcane jaggery prepared daily
-                    </p>
+                {/* Floating Asymmetrical Product Tag 2: Bottom Left */}
+                <motion.div 
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 5.5, ease: "easeInOut", repeat: Infinity, delay: 0.8 }}
+                  className="absolute bottom-16 left-3 sm:bottom-20 sm:left-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/40 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[135px] sm:max-w-[160px] z-10"
+                >
+                  <img src="/assets/Motichur Laddu.png" alt="Motichoor Laddu" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover" />
+                  <div>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Motichoor Laddu</span>
+                    <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">Pure A2 Cow Ghee</span>
                   </div>
+                </motion.div>
+
+                {/* Card Title & Info Overlay */}
+                <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 right-3 sm:right-5 text-[#FAF7F2] space-y-0.5 sm:space-y-1 z-10">
+                  <h3 className="font-serif-luxury text-base sm:text-xl font-bold text-[#F3E5AB]">
+                    Authentic Gaya Gud Tilkut
+                  </h3>
+                  <p className="text-[10px] sm:text-xs text-[#FAF7F2]/80 font-light line-clamp-2">
+                    Hand-pounded white sesame & organic sugarcane jaggery prepared daily
+                  </p>
                 </div>
+              </div>
 
-                {/* Card Footer Guarantee Bar */}
-                <div className="pt-3 sm:pt-4 flex items-center justify-between text-[10px] sm:text-xs text-[#0B3D2E] font-semibold px-0.5">
-                  <span className="flex items-center space-x-1 sm:space-x-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
-                    <span>100% Authentic Karigar Recipe</span>
-                  </span>
-                  <span className="text-[#D4AF37] font-bold">Est. 1995</span>
-                </div>
+              {/* Card Footer Guarantee Bar */}
+              <div className="pt-3 sm:pt-4 flex items-center justify-between text-[10px] sm:text-xs text-[#0B3D2E] font-semibold px-0.5">
+                <span className="flex items-center space-x-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
+                  <span>100% Authentic Karigar Recipe</span>
+                </span>
+                <span className="text-[#D4AF37] font-bold">Est. 1995</span>
+              </div>
 
-                {/* Outer Decorative Gold Rim Frame */}
-                <div className="absolute -inset-1 rounded-[38px] border border-[#D4AF37]/25 pointer-events-none" />
-
-              </motion.div>
-            </div>
+            </motion.div>
 
           </motion.div>
 
