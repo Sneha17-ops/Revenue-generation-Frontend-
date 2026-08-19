@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ShieldCheck, Heart, Crown, Award } from 'lucide-react';
+import { Sparkles, ShieldCheck, Heart, Crown } from 'lucide-react';
 import BlurText from '../ui/BlurText';
+import SplitText from '../ui/SplitText';
 import TiltedCard from '../ui/TiltedCard';
 import GradualBlur from '../ui/GradualBlur';
 
@@ -138,7 +139,7 @@ export const AboutOwnerSection = () => {
                   text="Behind Every Sweet," 
                   animateBy="words" 
                   direction="top" 
-                  delay={120} 
+                  delay={100} 
                   className="text-[#0B3D2E] block"
                 />
                 <BlurText 
@@ -151,7 +152,7 @@ export const AboutOwnerSection = () => {
               </h2>
             </div>
 
-            {/* STEP 5: Owner Name & Title Shimmer */}
+            {/* STEP 5: Owner Name & Title Shimmer with React Bits SplitText */}
             <motion.div 
               initial={{ opacity: 0.9, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -159,9 +160,11 @@ export const AboutOwnerSection = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-0.5 pt-1"
             >
-              <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#0B3D2E] tracking-wide">
-                SHRI UMESH MALAKAR
-              </h3>
+              <SplitText 
+                text="SHRI UMESH MALAKAR"
+                delay={45}
+                className="font-serif-luxury text-xl sm:text-2xl font-bold text-[#0B3D2E] tracking-wide"
+              />
               <p className="text-xs uppercase tracking-[0.2em] font-semibold text-[#D4AF37]">
                 Founder & Master Craftsman
               </p>

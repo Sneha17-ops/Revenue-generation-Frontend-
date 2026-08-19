@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Crown, Sparkles, Heart, ShieldCheck, ArrowRight } from 'lucide-react';
 import GradualBlur from '../ui/GradualBlur';
+import BlurText from '../ui/BlurText';
 
 export const HeritageStory = () => {
   const pillarItems = [
@@ -125,13 +126,23 @@ export const HeritageStory = () => {
               </div>
             </div>
 
-            {/* 2. Main Heading */}
+            {/* 2. Main Heading with BlurText Text Animation */}
             <div className="space-y-1">
               <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-[1.12]">
-                More Than A Sweet. <br />
-                <span className="gold-text-gradient font-cinzel block mt-1">
-                  A Family Tradition.
-                </span>
+                <BlurText 
+                  text="More Than A Sweet." 
+                  animateBy="words" 
+                  direction="top" 
+                  delay={100} 
+                  className="text-[#0B3D2E] block"
+                />
+                <BlurText 
+                  text="A Family Tradition." 
+                  animateBy="words" 
+                  direction="bottom" 
+                  delay={120} 
+                  className="gold-text-gradient font-cinzel block mt-1"
+                />
               </h2>
             </div>
 
