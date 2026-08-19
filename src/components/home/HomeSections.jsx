@@ -278,20 +278,20 @@ export const FAQSection = () => {
 
   const FAQS = [
     {
-      q: "Do you deliver pan-India or internationally?",
-      a: "No. VINDHYAWASINI TILKUT BHANDAR currently operates on a city-limits-only express delivery model to guarantee maximum freshness of our pure A2 ghee sweets. We do not provide international shipping."
+      q: "Is home delivery available?",
+      a: "Currently, VINDHYAWASINI TILKUT BHANDAR offers Store Pickup Only from our flagship store in Gaya. Home delivery will be available very soon!"
     },
     {
-      q: "How are city delivery charges calculated?",
-      a: "Delivery charges are based on distance from our flagship store: Base fee ₹40 for up to 3 km, and ₹10/km for additional distance. Orders above ₹999 receive FREE express delivery!"
+      q: "How does Store Pickup work?",
+      a: "Select your fresh confections on our website or WhatsApp. Once confirmed, your order will be prepared and ready for direct pickup at our physical store during store hours (7:00 AM – 10:00 PM)."
     },
     {
-      q: "Can I pick up my order directly from the store?",
-      a: "Yes! You can choose 'Store Pickup' at checkout to pick up hot, fresh packages from our store during opening hours (7:00 AM – 10:00 PM) at zero charge."
+      q: "When will home delivery be launched?",
+      a: "We are currently setting up our express delivery infrastructure to bring fresh sweets straight to your doorstep very soon. Stay tuned to our website and WhatsApp for launch announcements!"
     },
     {
       q: "How do I place bulk orders for weddings and corporate events?",
-      a: "For custom wedding boxes and bulk orders, click the 'WhatsApp' or 'Bulk Orders' buttons to connect directly with our catering team."
+      a: "For custom wedding boxes, corporate hampers, and large event orders, connect with us via WhatsApp or phone (+91 98765 43210). Bulk orders can be collected directly from our store."
     }
   ];
 
@@ -304,7 +304,7 @@ export const FAQSection = () => {
             Frequently Asked Questions
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#0B3D2E]">
-            City Delivery & Store <span className="gold-text-gradient font-cinzel">Information</span>
+            Store Pickup & Order <span className="gold-text-gradient font-cinzel">Information</span>
           </h2>
         </div>
 

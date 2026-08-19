@@ -13,7 +13,7 @@ import {
   Twitter, 
   Youtube, 
   ShieldCheck, 
-  Truck, 
+  ShoppingBag, 
   Clock,
   MessageSquare,
   Lock
@@ -39,19 +39,19 @@ export const Footer = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* City Express Banner Notice */}
+        {/* Store Pickup Banner Notice */}
         <div className="bg-gradient-to-r from-royal-greenLight via-royal-green to-royal-greenDark p-6 sm:p-10 rounded-2xl border border-royal-gold/30 shadow-luxury mb-16 relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div className="lg:col-span-8 space-y-2">
               <div className="inline-flex items-center space-x-2 text-royal-gold text-xs tracking-widest uppercase font-bold bg-royal-gold/10 px-3 py-1 rounded-full border border-royal-gold/20">
                 <MapPin className="w-3.5 h-3.5" />
-                <span>City Limits Delivery & Local Store Pickup</span>
+                <span>Store Pickup Available • Home Delivery Coming Soon</span>
               </div>
               <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-royal-gold">
-                Fresh Sweets Delivered Express Within City Limits
+                Direct Store Pickup — Fresh Artisanal Sweets
               </h3>
               <p className="text-royal-goldMuted/80 text-sm max-w-2xl">
-                We deliver fresh, pure desi ghee Bihari delicacies same-day strictly within city limits. Distance-based delivery charges apply. Store pickup option available at zero charge.
+                Order online or via WhatsApp to pick up hot, fresh A2 Cow Desi Ghee sweets directly from our store in Gaya. Home delivery will be launching very soon!
               </p>
             </div>
 
@@ -63,7 +63,7 @@ export const Footer = () => {
                 className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-3 rounded-xl flex items-center justify-center space-x-2 text-sm transition-all shadow-md"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>WhatsApp Instant Order</span>
+                <span>WhatsApp Store Inquiry</span>
               </a>
 
               <a 
@@ -98,7 +98,7 @@ export const Footer = () => {
                 <Clock className="w-3.5 h-3.5" />
                 <span>Store Timings: {CITY_DELIVERY_RULES.storeTimings}</span>
               </div>
-              <p>📍 Delivery available strictly within city limits. No international shipping.</p>
+              <p>📍 Store pickup available now. City delivery service coming soon!</p>
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export const Footer = () => {
           <div className="space-y-3">
             <h5 className="font-cinzel text-royal-gold font-semibold tracking-wider text-sm">STORE POLICIES</h5>
             <ul className="space-y-2 text-sm text-royal-goldMuted/70">
-              <li><Link href="/shipping-policy" className="hover:text-royal-gold transition-colors">City Shipping & Delivery Policy</Link></li>
+              <li><Link href="/shipping-policy" className="hover:text-royal-gold transition-colors">Store Pickup & Delivery Policy</Link></li>
               <li><Link href="/refund-policy" className="hover:text-royal-gold transition-colors">Refund & Cancellation</Link></li>
               <li><Link href="/privacy-policy" className="hover:text-royal-gold transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="hover:text-royal-gold transition-colors">Terms & Conditions</Link></li>
@@ -149,12 +149,12 @@ export const Footer = () => {
               <span>100% Pure A2 Cow Ghee</span>
             </span>
             <span className="flex items-center space-x-1.5">
-              <Truck className="w-4 h-4 text-royal-gold" />
-              <span>City Limits Express Delivery</span>
+              <ShoppingBag className="w-4 h-4 text-royal-gold" />
+              <span>Store Pickup Only (Delivery Coming Soon)</span>
             </span>
             <span className="flex items-center space-x-1.5">
               <Lock className="w-4 h-4 text-royal-gold" />
-              <span>Razorpay & Cash on Delivery</span>
+              <span>Razorpay & Cash at Store Pickup</span>
             </span>
           </div>
 
