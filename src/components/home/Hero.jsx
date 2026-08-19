@@ -85,9 +85,9 @@ export const Hero = () => {
 
             {/* Main Heading: "Today's Fresh" followed by "Hot Confections" */}
             <motion.div variants={itemVariants} className="space-y-1">
-              <h1 className="font-serif-luxury text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.06] tracking-tight text-[#0B3D2E]">
+              <h1 className="font-serif-luxury text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.06] tracking-tight text-[#0B3D2E]">
                 Today's Fresh <br />
-                <span className="gold-text-gradient font-cinzel text-5xl sm:text-7xl lg:text-8xl drop-shadow-sm">
+                <span className="gold-text-gradient font-cinzel text-5xl sm:text-7xl lg:text-8xl font-black drop-shadow-sm">
                   Hot Confections
                 </span>
               </h1>
@@ -182,23 +182,19 @@ export const Hero = () => {
               className="relative w-full max-w-md bg-[#FFFFFF] p-5 rounded-[32px] border-2 border-[#D4AF37]/45 shadow-[0_30px_60px_-15px_rgba(11,61,46,0.14)] group hover:border-[#D4AF37] hover:shadow-[0_40px_80px_-20px_rgba(212,175,55,0.35)] transition-all duration-500"
             >
               
-              {/* Circular Heritage Badge: "LEGACY SINCE 1995" */}
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-6 -right-6 z-20 w-20 h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center"
-              >
+              {/* Circular Heritage Badge: "LEGACY SINCE 1995" (Static) */}
+              <div className="absolute -top-6 -right-6 z-20 w-20 h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
                 <div className="w-full h-full rounded-full border border-dashed border-[#D4AF37]/60 flex flex-col items-center justify-center p-1 text-[#F3E5AB]">
                   <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
                   <span className="text-[8px] font-extrabold uppercase tracking-widest leading-tight">LEGACY</span>
                   <span className="text-[9px] font-black text-[#D4AF37]">1995</span>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Product Hero Image */}
               <div className="relative h-80 sm:h-[400px] rounded-[24px] overflow-hidden bg-[#FAF7F2] shadow-inner">
                 <img 
-                  src="/assets/Gud Tilkut.png" 
+                  src="/assets/image.png" 
                   alt="Authentic Gaya Gud Tilkut - Vindhyawasini Tilkut Bhandar" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
