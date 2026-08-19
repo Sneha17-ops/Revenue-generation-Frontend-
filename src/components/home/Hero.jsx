@@ -1,12 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, Crown, Flame, Sparkles, MessageSquare } from 'lucide-react';
 import { CITY_DELIVERY_RULES } from '../../data/products';
 
+// Dynamically import MoltenMetal to ensure SSR-safe WebGL initialization
+const MoltenMetal = dynamic(() => import('../ui/MoltenMetal'), { ssr: false });
+
 export const Hero = () => {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
   // Staggered motion variants for smooth premium entrance
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -68,10 +83,10 @@ export const Hero = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left"
+            className="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left relative z-20"
           >
             
-            {/* Small Badge */}
+            {/* 1. Prepared Fresh Daily Badge */}
             <motion.div variants={itemVariants}>
               <div className="inline-flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs uppercase tracking-[0.14em] sm:tracking-[0.2em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#D4AF37]/40 shadow-[0_4px_16px_rgba(212,175,55,0.12)] max-w-full flex-wrap justify-center">
                 <span className="flex items-center space-x-1 sm:space-x-1.5 text-[#D4AF37]">
@@ -83,7 +98,7 @@ export const Hero = () => {
               </div>
             </motion.div>
 
-            {/* Main Heading: "Today's Fresh" followed by "Hot Confections" */}
+            {/* 2. Main Heading: "Today's Fresh" followed by "Hot Confections" */}
             <motion.div variants={itemVariants} className="space-y-1">
               <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.08] sm:leading-[1.06] tracking-tight text-[#0B3D2E]">
                 Today's Fresh <br />
@@ -93,7 +108,7 @@ export const Hero = () => {
               </h1>
             </motion.div>
 
-            {/* Supporting Text */}
+            {/* 3. Description Text */}
             <motion.p 
               variants={itemVariants}
               className="text-[#0B3D2E]/85 text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed font-normal mx-auto lg:mx-0 px-2 sm:px-0"
@@ -101,7 +116,7 @@ export const Hero = () => {
               Traditional recipes, carefully prepared with authentic ingredients and the same attention to quality that has defined <span className="font-semibold text-[#0B3D2E]">Vindhyawasini</span> for generations. Handcrafted daily in 100% pure A2 Cow Desi Ghee.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* 4. CTA Buttons */}
             <motion.div 
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-1 sm:pt-2"
@@ -157,33 +172,68 @@ export const Hero = () => {
 
           </motion.div>
 
-          {/* Right Column: Hero Visual Product Composition */}
+          {/* Right Column: Hero Visual Product Composition & MoltenMetal Layer */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
+            initial={{ opacity: 0, scale: 0.94, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative flex justify-center items-center py-2 sm:py-4"
+            className="lg:col-span-5 relative flex justify-center items-center py-2 sm:py-4 z-10"
           >
             
-            {/* Ambient Backlight Glow */}
-            <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-[#D4AF37]/25 via-[#F3E5AB]/20 to-transparent blur-2xl opacity-80 pointer-events-none" />
+            {/* 5. MoltenMetal Decorative Fluid Texture Layer (BEHIND Sweet Image) */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.88 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.4, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
+              style={{
+                width: 'min(90vw, 560px)',
+                height: 'min(90vw, 560px)',
+              }}
+            >
+              <div className="w-full h-full rounded-full opacity-30 mix-blend-multiply overflow-hidden blur-[4px] sm:blur-[6px] transition-opacity duration-700">
+                <MoltenMetal 
+                  color1="#bcd792" 
+                  color2="#d7c387" 
+                  color3="#076c4b" 
+                  colorMode="molten" 
+                  speed={0.3} 
+                  scale={4} 
+                  detail={3} 
+                  glow={1.4} 
+                  coreSize={0.1} 
+                  swirl={1} 
+                  fold={-0.2} 
+                  blackPoint={0.05} 
+                  brightness={1.3} 
+                  opacity={0.85} 
+                  grain={true} 
+                  grainIntensity={0.04} 
+                  mouseInteraction={isDesktop} 
+                  mouseStrength={0.3} 
+                />
+              </div>
+            </motion.div>
+
+            {/* Ambient Backlight Glow Overlay */}
+            <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-[#D4AF37]/20 via-[#F3E5AB]/15 to-transparent blur-2xl opacity-70 pointer-events-none z-0" />
 
             {/* Micro Floating Gold Dust Particles */}
-            <div className="absolute inset-0 pointer-events-none hidden sm:block">
+            <div className="absolute inset-0 pointer-events-none hidden sm:block z-10">
               <div className="absolute top-10 left-6 w-2 h-2 rounded-full bg-[#D4AF37] opacity-60 animate-ping" />
               <div className="absolute bottom-16 right-8 w-2.5 h-2.5 rounded-full bg-[#F3E5AB] opacity-70 animate-pulse" />
               <div className="absolute top-1/2 right-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-50" />
             </div>
 
-            {/* Main Composition Showcase Card */}
+            {/* 6. Main Composition Showcase Card (FOREGROUND) */}
             <motion.div 
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
-              className="relative w-full max-w-[340px] sm:max-w-md bg-[#FFFFFF] p-3.5 sm:p-5 rounded-[24px] sm:rounded-[32px] border-2 border-[#D4AF37]/45 shadow-[0_20px_50px_-12px_rgba(11,61,46,0.14)] group hover:border-[#D4AF37] hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.3)] transition-all duration-500"
+              className="relative z-10 w-full max-w-[340px] sm:max-w-md bg-[#FFFFFF] p-3.5 sm:p-5 rounded-[24px] sm:rounded-[32px] border-2 border-[#D4AF37]/45 shadow-[0_20px_50px_-12px_rgba(11,61,46,0.14)] group hover:border-[#D4AF37] hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.3)] transition-all duration-500"
             >
               
-              {/* Circular Heritage Badge: "LEGACY SINCE 1995" (Static) */}
-              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-20 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
+              {/* Circular Heritage Badge: "LEGACY SINCE 1995" (Static Foreground) */}
+              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-30 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
                 <div className="w-full h-full rounded-full border border-dashed border-[#D4AF37]/60 flex flex-col items-center justify-center p-0.5 sm:p-1 text-[#F3E5AB]">
                   <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#D4AF37]" />
                   <span className="text-[7px] sm:text-[8px] font-extrabold uppercase tracking-widest leading-tight">LEGACY</span>
@@ -207,7 +257,7 @@ export const Hero = () => {
                   <span className="tracking-wider">Gaya Heritage Special</span>
                 </div>
 
-                {/* Floating Secondary Mini Product Cards (Composition Effect) */}
+                {/* Floating Secondary Mini Product Cards */}
                 <motion.div 
                   animate={{ y: [0, 6, 0] }}
                   transition={{ duration: 5, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
