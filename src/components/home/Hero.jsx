@@ -1,29 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Crown, Flame, Sparkles, MessageSquare } from 'lucide-react';
+import { ArrowRight, Flame, Sparkles, MessageSquare } from 'lucide-react';
 import { CITY_DELIVERY_RULES } from '../../data/products';
 import BlurText from '../ui/BlurText';
 
-// Dynamically import MoltenMetal to ensure SSR-safe WebGL initialization
-const MoltenMetal = dynamic(() => import('../ui/MoltenMetal'), { ssr: false });
-
 export const Hero = () => {
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-    return () => window.removeEventListener('resize', checkDesktop);
-  }, []);
-
-  // Staggered motion variants for smooth premium entrance
+  // Staggered motion variants for smooth premium left-column entrance
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -53,31 +38,27 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-fit lg:min-h-[92vh] bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden flex items-center py-10 sm:py-14 lg:py-20 z-10 selection:bg-[#D4AF37]/30">
+    <section className="relative min-h-fit lg:min-h-[90vh] bg-[#FAF7F2] text-[#0B3D2E] overflow-hidden flex items-center py-10 sm:py-14 lg:py-20 z-10 selection:bg-[#D4AF37]/30">
       
-      {/* 1. Subtle Warm Ivory Light Gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#F6F0E6]/70 to-[#FAF7F2] pointer-events-none" />
-      <div className="absolute top-[-10%] right-[-5%] w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-gradient-radial from-[#D4AF37]/12 via-[#FAF7F2]/0 to-transparent blur-[100px] sm:blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[300px] sm:w-[550px] h-[300px] sm:h-[550px] bg-gradient-radial from-[#C5A059]/10 via-[#FAF7F2]/0 to-transparent blur-[90px] sm:blur-[130px] pointer-events-none" />
+      {/* 1. Clean Warm Ivory Canvas Background */}
+      <div className="absolute inset-0 bg-[#FAF7F2] pointer-events-none" />
 
-      {/* 2. Fine Indian Line-Art Decorative Edges */}
-      <svg className="absolute top-4 left-4 sm:top-6 sm:left-6 w-24 sm:w-36 h-24 sm:h-36 text-[#D4AF37]/25 pointer-events-none select-none" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
+      {/* 2. Extremely Faint Indian Heritage Decorative Line-Art Watermarks */}
+      <svg className="absolute top-4 left-4 sm:top-6 sm:left-6 w-28 sm:w-40 h-28 sm:h-40 text-[#D4AF37]/15 pointer-events-none select-none" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.6">
         <circle cx="20" cy="20" r="16" strokeDasharray="2 3" />
-        <path d="M 20,4 C 28,12 28,28 20,36 C 12,28 12,12 20,4 Z" fill="currentColor" fillOpacity="0.08" />
-        <path d="M 4,20 C 12,28 28,28 36,20 C 28,12 12,12 4,20 Z" fill="currentColor" fillOpacity="0.08" />
-        <line x1="20" y1="0" x2="20" y2="40" strokeWidth="0.5" />
-        <line x1="0" y1="20" x2="40" y2="20" strokeWidth="0.5" />
+        <path d="M 20,4 C 28,12 28,28 20,36 C 12,28 12,12 20,4 Z" fill="currentColor" fillOpacity="0.04" />
+        <path d="M 4,20 C 12,28 28,28 36,20 C 28,12 12,12 4,20 Z" fill="currentColor" fillOpacity="0.04" />
+        <line x1="20" y1="0" x2="20" y2="40" strokeWidth="0.4" />
+        <line x1="0" y1="20" x2="40" y2="20" strokeWidth="0.4" />
       </svg>
 
-      <svg className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-32 sm:w-48 h-32 sm:h-48 text-[#D4AF37]/20 pointer-events-none select-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="0.8">
-        <path d="M 100,10 L 125,50 L 115,50 L 135,90 L 125,90 L 150,140 L 50,140 L 75,90 L 65,90 L 85,50 L 75,50 Z" fill="currentColor" fillOpacity="0.04" />
-        <line x1="100" y1="140" x2="100" y2="190" strokeWidth="1.2" strokeDasharray="3 3" />
-        <circle cx="100" cy="165" r="16" />
-        <path d="M 85,165 C 100,150 100,180 115,165" />
+      <svg className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-36 sm:w-52 h-36 sm:h-52 text-[#D4AF37]/12 pointer-events-none select-none" viewBox="0 0 200 200" fill="none" stroke="currentColor" strokeWidth="0.6">
+        <circle cx="100" cy="100" r="75" strokeDasharray="2 4" />
+        <polygon points="100,20 120,70 180,100 120,130 100,180 80,130 20,100 80,70" fill="currentColor" fillOpacity="0.02" />
       </svg>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-center">
           
           {/* ========================================================================= */}
           {/* LEFT COLUMN: Editorial Typography, Story Headline & Actions              */}
@@ -89,7 +70,7 @@ export const Hero = () => {
             className="lg:col-span-7 space-y-6 sm:space-y-7 text-center lg:text-left relative z-20"
           >
             
-            {/* 1. Heritage Prepared Fresh Daily Badge */}
+            {/* 1. Prepared Fresh Daily Badge */}
             <motion.div variants={itemVariants}>
               <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#0B3D2E] font-bold bg-[#FFFFFF] px-4 py-1.5 sm:py-2 rounded-full border border-[#D4AF37]/40 shadow-xs max-w-full flex-wrap justify-center">
                 <span className="flex items-center space-x-1.5 text-[#D4AF37]">
@@ -193,147 +174,64 @@ export const Hero = () => {
           </motion.div>
 
           {/* ========================================================================= */}
-          {/* RIGHT COLUMN: Layered Editorial Sweet Composition & MoltenMetal Texture   */}
+          {/* RIGHT COLUMN: Custom Indian Heritage Platter Frame Composition            */}
           {/* ========================================================================= */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.94, y: 24 }}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative flex justify-center items-center py-2 sm:py-4 z-10"
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 relative flex justify-center items-center py-4 sm:py-6 z-10"
           >
             
-            {/* 5. MoltenMetal Decorative Fluid Texture Layer (BEHIND Sweet Image) */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.88 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.4, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
-              style={{
-                width: 'min(90vw, 560px)',
-                height: 'min(90vw, 560px)',
-              }}
-            >
-              <div className="w-full h-full rounded-full opacity-30 mix-blend-multiply overflow-hidden blur-[4px] sm:blur-[6px] transition-opacity duration-700">
-                <MoltenMetal 
-                  color1="#bcd792" 
-                  color2="#d7c387" 
-                  color3="#076c4b" 
-                  colorMode="molten" 
-                  speed={0.3} 
-                  scale={4} 
-                  detail={3} 
-                  glow={1.4} 
-                  coreSize={0.1} 
-                  swirl={1} 
-                  fold={-0.2} 
-                  blackPoint={0.05} 
-                  brightness={1.3} 
-                  opacity={0.85} 
-                  grain={true} 
-                  grainIntensity={0.04} 
-                  mouseInteraction={isDesktop} 
-                  mouseStrength={0.3} 
-                />
-              </div>
-            </motion.div>
-
-            {/* Ambient Backlight Glow Overlay */}
-            <div className="absolute -inset-4 rounded-[36px] bg-gradient-to-tr from-[#D4AF37]/20 via-[#F3E5AB]/15 to-transparent blur-2xl opacity-70 pointer-events-none z-0" />
-
-            {/* Micro Floating Gold Particles */}
-            <div className="absolute inset-0 pointer-events-none hidden sm:block z-10">
-              <div className="absolute top-10 left-6 w-2 h-2 rounded-full bg-[#D4AF37] opacity-60 animate-ping" />
-              <div className="absolute bottom-16 right-8 w-2.5 h-2.5 rounded-full bg-[#F3E5AB] opacity-70 animate-pulse" />
-              <div className="absolute top-1/2 right-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37] opacity-50" />
-            </div>
-
-            {/* 6. Main Composition Showcase Card (FOREGROUND LAYERED EDITORIAL FRAME) */}
-            <motion.div 
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 7, ease: "easeInOut", repeat: Infinity }}
-              className="relative z-10 w-full max-w-[340px] sm:max-w-md bg-[#FFFFFF] p-3.5 sm:p-5 rounded-[28px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.18)] group hover:border-[#D4AF37] hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.3)] transition-all duration-500"
-            >
+            {/* Main Sweets Frame Outer Container */}
+            <div className="relative w-full max-w-[340px] sm:max-w-md">
               
-              {/* Heritage Seal/Badge: "EST. 1995 • GAYA HERITAGE" */}
-              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 z-30 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-xl flex items-center justify-center p-1 text-center">
-                
-                {/* Slow Rotating Outer Dash Circle */}
+              {/* HERITAGE SEAL: "Since 1995" ONLY (Positioned upper-right corner) */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="absolute -top-4 -right-3 sm:-top-5 sm:-right-5 z-30"
+              >
                 <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 25, ease: "linear", repeat: Infinity }}
-                  className="absolute inset-1 rounded-full border border-dashed border-[#D4AF37]/60 pointer-events-none"
-                />
-
-                <div className="relative z-10 flex flex-col items-center justify-center text-[#F3E5AB]">
-                  <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#D4AF37]" />
-                  <span className="text-[7px] sm:text-[8px] font-extrabold uppercase tracking-widest leading-tight mt-0.5">LEGACY</span>
-                  <span className="text-[8px] sm:text-[9px] font-black text-[#D4AF37]">1995</span>
-                </div>
-              </div>
-
-              {/* Product Hero Image Frame */}
-              <div className="relative h-72 sm:h-80 md:h-[400px] rounded-[20px] sm:rounded-[28px] overflow-hidden bg-[#FAF7F2] shadow-inner">
-                <img 
-                  src="/assets/image.png" 
-                  alt="Authentic Gaya Sweets - Vindhyawasini Tilkut Bhandar" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-[#06241B]/85 via-transparent to-transparent opacity-90 pointer-events-none" />
-
-                {/* Top Heritage Badge */}
-                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-[#FFFFFF]/90 backdrop-blur-md text-[#0B3D2E] font-bold text-[10px] sm:text-xs uppercase px-3 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-xs flex items-center space-x-1.5 z-10">
-                  <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  <span className="tracking-wider">Gaya Heritage Special</span>
-                </div>
-
-                {/* Floating Asymmetrical Product Tag 1: Top Right */}
-                <motion.div 
-                  animate={{ y: [0, 5, 0] }}
-                  transition={{ duration: 5, ease: "easeInOut", repeat: Infinity, delay: 0.3 }}
-                  className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/40 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[125px] sm:max-w-[150px] z-10"
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#06241B] border-2 border-[#D4AF37] shadow-lg flex items-center justify-center p-1 text-center"
                 >
-                  <img src="/assets/Khaja.png" alt="Silao Khaja" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover" />
-                  <div>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Silao Khaja</span>
-                    <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">64 Flaky Layers</span>
+                  <div className="w-full h-full rounded-full border border-dashed border-[#D4AF37]/50 flex flex-col items-center justify-center text-[#F3E5AB]">
+                    <span className="text-[9px] sm:text-[11px] font-serif-luxury font-bold text-[#F3E5AB] leading-none">
+                      Since 1995
+                    </span>
                   </div>
                 </motion.div>
+              </motion.div>
 
-                {/* Floating Asymmetrical Product Tag 2: Bottom Left */}
-                <motion.div 
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ duration: 5.5, ease: "easeInOut", repeat: Infinity, delay: 0.8 }}
-                  className="absolute bottom-16 left-3 sm:bottom-20 sm:left-4 bg-[#FFFFFF]/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-[#D4AF37]/40 shadow-md flex items-center space-x-1.5 sm:space-x-2 max-w-[135px] sm:max-w-[160px] z-10"
-                >
-                  <img src="/assets/Motichur Laddu.png" alt="Motichoor Laddu" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl object-cover" />
-                  <div>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-[#0B3D2E] block leading-tight">Motichoor Laddu</span>
-                    <span className="text-[8px] sm:text-[9px] text-[#D4AF37] font-semibold leading-none block">Pure A2 Cow Ghee</span>
+              {/* TRADITIONAL INDIAN HERITAGE FRAME (Arched Platter Contour) */}
+              <motion.div 
+                whileHover={{ y: -3, scale: 1.01 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="relative bg-[#FFFFFF] p-3 sm:p-4 rounded-[40px] border-2 border-[#D4AF37]/60 shadow-[0_20px_50px_-15px_rgba(11,61,46,0.12)] group hover:border-[#D4AF37] transition-all duration-500"
+              >
+                {/* Inner Ornamental Layered Border */}
+                <div className="p-1 rounded-[34px] border border-[#D4AF37]/35 bg-[#FAF7F2]">
+                  
+                  {/* Clean Sweets Photograph Container (Zero Labels/Overlays) */}
+                  <div className="relative h-[340px] sm:h-[400px] md:h-[440px] rounded-[30px] overflow-hidden bg-[#FAF7F2]">
+                    <img 
+                      src="/assets/image.png" 
+                      alt="Vindhyawasini Tilkut Bhandar Authentic Sweets" 
+                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
+                    />
                   </div>
-                </motion.div>
 
-                {/* Card Title & Info Overlay */}
-                <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 right-3 sm:right-5 text-[#FAF7F2] space-y-0.5 sm:space-y-1 z-10">
-                  <h3 className="font-serif-luxury text-base sm:text-xl font-bold text-[#F3E5AB]">
-                    Authentic Gaya Gud Tilkut
-                  </h3>
-                  <p className="text-[10px] sm:text-xs text-[#FAF7F2]/80 font-light line-clamp-2">
-                    Hand-pounded white sesame & organic sugarcane jaggery prepared daily
-                  </p>
                 </div>
-              </div>
 
-              {/* Card Footer Guarantee Bar */}
-              <div className="pt-3 sm:pt-4 flex items-center justify-between text-[10px] sm:text-xs text-[#0B3D2E] font-semibold px-0.5">
-                <span className="flex items-center space-x-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
-                  <span>100% Authentic Karigar Recipe</span>
-                </span>
-                <span className="text-[#D4AF37] font-bold">Est. 1995</span>
-              </div>
+                {/* Subtle Outer Frame Accent Rim */}
+                <div className="absolute -inset-1 rounded-[42px] border border-[#D4AF37]/20 pointer-events-none" />
 
-            </motion.div>
+              </motion.div>
+
+            </div>
 
           </motion.div>
 
