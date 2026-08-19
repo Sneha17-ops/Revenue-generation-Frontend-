@@ -1,25 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router'; // import or next/navigation
+import Link from 'next/link';
 import { 
   ShieldCheck, 
   MapPin, 
-  Truck, 
   Store, 
   CreditCard, 
-  Banknote, 
-  Clock, 
-  CheckCircle2, 
   Lock, 
   AlertCircle,
   Phone,
   MessageSquare,
   Printer,
-  Download,
-  FileText,
   X,
-  Sparkles
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  ArrowRight,
+  RefreshCw,
+  ShoppingBag
 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -27,30 +28,27 @@ import { useOrderStore } from '../../store/useOrderStore';
 import { CITY_DELIVERY_RULES } from '../../data/products';
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { cart, getSubtotal, getDiscountAmount, clearCart } = useCartStore();
   const { isAuthenticated, openAuthModal, user, token } = useAuthStore();
   const { addOrder } = useOrderStore();
 
-  const [fulfillmentType, setFulfillmentType] = useState('delivery'); // 'delivery' | 'pickup'
-  const [distanceKm, setDistanceKm] = useState(3);
-  const [paymentMethod, setPaymentMethod] = useState('razorpay'); // 'razorpay' | 'cod'
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [completedInvoice, setCompletedInvoice] = useState(null);
+  const [paymentStatusState, setPaymentStatusState] = useState(null); // 'SUCCESS' | 'FAILED' | null
+  const [completedOrder, setCompletedOrder] = useState(null);
+  const [currentOrderId, setCurrentOrderId] = useState(null);
 
   // Form Fields
   const [formData, setFormData] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
-    address: '',
-    landmark: '',
-    pincode: '800001',
-    instructions: ''
+    email: user?.email || '',
+    notes: ''
   });
 
   const subtotal = getSubtotal();
   const discount = getDiscountAmount();
+  const grandTotal = Math.max(0, subtotal - discount);
 
   // Load Razorpay Script dynamically on mount
   useEffect(() => {
@@ -65,229 +63,340 @@ export default function CheckoutPage() {
     };
   }, []);
 
-  // Distance-based Fee Calculator (Max City Radius: 15 km)
-  const deliveryFee = fulfillmentType === 'pickup' 
-    ? 0 
-    : (subtotal >= CITY_DELIVERY_RULES.freeDeliveryThreshold 
-        ? 0 
-        : CITY_DELIVERY_RULES.baseDeliveryFee + Math.max(0, distanceKm - CITY_DELIVERY_RULES.freeDistanceKm) * CITY_DELIVERY_RULES.perKmFee);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  const grandTotal = Math.max(0, subtotal - discount + deliveryFee);
-
-  const handlePlaceOrder = async (e) => {
+  const handleInitiatePayment = async (e) => {
     if (e) e.preventDefault();
     setErrorMessage(null);
 
-    // 1. JWT Authentication Enforcement
-    if (!isAuthenticated) {
-      openAuthModal();
-      setErrorMessage("Authentication required before checkout. Please log in first.");
+    // 1. Mobile Phone Number Validation
+    if (!formData.name || !formData.phone) {
+      setErrorMessage("Please enter your recipient name and mobile phone number.");
       return;
     }
 
-    if (fulfillmentType === 'delivery' && (!formData.address || !formData.phone)) {
-      setErrorMessage("Please provide a valid delivery address and phone number.");
+    if (formData.phone.replace(/\D/g, '').length < 10) {
+      setErrorMessage("Please enter a valid 10-digit mobile number for order & SMS updates.");
       return;
     }
 
     setIsProcessing(true);
 
-    const orderId = `BINDHYA_ORD_${Math.floor(100000 + Math.random() * 900000)}`;
+    try {
+      const authToken = token || 'jwt_mock_token_patron_12345';
 
-    const orderDetails = {
-      id: orderId,
-      date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      items: [...cart],
-      subtotal,
-      discount,
-      deliveryFee,
-      grandTotal,
-      fulfillmentType,
-      distanceKm: fulfillmentType === 'delivery' ? distanceKm : 0,
-      paymentMethod: paymentMethod === 'razorpay' ? 'Razorpay Online' : 'Cash on Delivery',
-      deliveryAddress: fulfillmentType === 'delivery' ? `${formData.address}, ${formData.landmark ? formData.landmark + ', ' : ''}${formData.pincode}` : 'Store Pickup',
-      recipientName: formData.name || user?.name || "Patron",
-      recipientPhone: formData.phone || user?.phone || "+91 9876543210",
-      status: 'Order Confirmed'
-    };
+      // 2. Call backend to create Razorpay Order & validate prices/stock on server
+      const createRes = await fetch(`${API_URL}/api/payment/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          items: cart,
+          customerName: formData.name,
+          customerPhone: formData.phone,
+          customerEmail: formData.email,
+          notes: formData.notes
+        })
+      });
 
-    // 2. Razorpay Online Payment Gateway Integration
-    if (paymentMethod === 'razorpay') {
-      try {
-        const authToken = token || 'jwt_mock_token_patron_12345';
-        
-        // Call backend to create Razorpay Order
-        const response = await fetch('http://localhost:5000/api/payment/create-order', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
-          },
-          body: JSON.stringify({
-            amount: grandTotal,
-            receiptNote: orderId,
-            currency: 'INR'
-          })
-        });
+      const createData = await createRes.json();
 
-        const data = await response.json();
+      if (!createData.success) {
+        throw new Error(createData.message || "Failed to initialize payment order on server");
+      }
 
-        if (!data.success) {
-          throw new Error(data.message || "Failed to initialize payment order on server");
-        }
+      const { orderId, razorpayOrderId, amountInPaise, currency, keyId } = createData;
+      setCurrentOrderId(orderId);
 
-        const razorpayOrder = data.order;
-        const keyId = data.keyId || 'rzp_test_BindhyaRoyal2026';
+      // 3. Razorpay JS SDK Checkout Options
+      const options = {
+        key: keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_BindhyaRoyal2026',
+        amount: amountInPaise,
+        currency: currency || "INR",
+        name: "VINDHYAWASINI TILKUT BHANDAR",
+        description: `Store Pickup Order ${orderId} (${cart.length} Artisanal Sweets)`,
+        image: "/assets/MP8.jpeg",
+        order_id: razorpayOrderId,
+        prefill: {
+          name: formData.name,
+          email: formData.email || "patron@vindhyawasini.com",
+          contact: formData.phone
+        },
+        theme: {
+          color: "#0B3D2E"
+        },
+        handler: async function (paymentResponse) {
+          // 4. Send payment response signature to BACKEND FOR HMAC VERIFICATION
+          try {
+            const verifyRes = await fetch(`${API_URL}/api/payment/verify-payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                orderId: orderId
+              })
+            });
 
-        // Options for Razorpay JS SDK Modal
-        const options = {
-          key: keyId,
-          amount: razorpayOrder.amount,
-          currency: razorpayOrder.currency || "INR",
-          name: "VINDHYAWASINI TILKUT BHANDAR",
-          description: `Payment for Order ${orderId} (${cart.length} Sweets)`,
-          image: "/images/sweets/kaju_katli.webp",
-          order_id: razorpayOrder.id,
-          prefill: {
-            name: formData.name || user?.name || "Patron",
-            email: "patron@vindhyawasini.com",
-            contact: formData.phone || user?.phone || "9876543210"
-          },
-          theme: {
-            color: "#D4AF37"
-          },
-          handler: async function (paymentResponse) {
-            // Verify HMAC Signature on Backend
-            try {
-              const verifyRes = await fetch('http://localhost:5000/api/payment/verify-payment', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${authToken}`
-                },
-                body: JSON.stringify({
-                  razorpay_order_id: paymentResponse.razorpay_order_id,
-                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                  razorpay_signature: paymentResponse.razorpay_signature,
-                  orderDetails: orderDetails
-                })
-              });
+            const verifyData = await verifyRes.json();
 
-              const verifyData = await verifyRes.json();
-
-              if (verifyData.success) {
-                const confirmedOrder = {
-                  ...orderDetails,
-                  paymentId: paymentResponse.razorpay_payment_id,
-                  razorpayOrderId: paymentResponse.razorpay_order_id,
-                  status: 'Paid & Packing'
-                };
-
-                addOrder(confirmedOrder);
-                clearCart();
-                setIsProcessing(false);
-                setCompletedInvoice(confirmedOrder);
-              } else {
-                throw new Error(verifyData.message || "Payment signature verification failed");
-              }
-            } catch (err) {
-              console.error("Verification error:", err);
+            if (verifyData.success) {
+              const verifiedOrder = verifyData.order;
+              addOrder(verifiedOrder);
+              clearCart();
               setIsProcessing(false);
-              setErrorMessage("⚠️ Payment Verification Failed: " + err.message);
+              setCompletedOrder(verifiedOrder);
+              setPaymentStatusState('SUCCESS');
+            } else {
+              throw new Error(verifyData.message || "Payment signature verification failed on backend.");
             }
-          },
-          modal: {
-            ondismiss: function () {
-              setIsProcessing(false);
-              setErrorMessage("Payment process was cancelled. Your cart items remain saved.");
-            }
+          } catch (err) {
+            console.error("Backend Verification error:", err);
+            setIsProcessing(false);
+            setPaymentStatusState('FAILED');
+            setErrorMessage("⚠️ Security Verification Error: " + err.message);
           }
-        };
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(false);
+            setErrorMessage("Payment session was cancelled. Your items remain saved in your shopping bag.");
+          }
+        }
+      };
 
-        if (window.Razorpay) {
-          const rzp = new window.Razorpay(options);
-          rzp.open();
-        } else {
-          // Fallback simulation mode if external Razorpay CDN is unreachable in test environment
-          setTimeout(async () => {
+      if (window.Razorpay) {
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        // Fallback simulation mode if external Razorpay CDN is blocked
+        setTimeout(async () => {
+          try {
             const mockPaymentId = `pay_mock_${Date.now()}`;
             const mockSig = `mock_sig_${Date.now()}`;
 
-            const confirmedOrder = {
-              ...orderDetails,
-              paymentId: mockPaymentId,
-              status: 'Paid & Packing'
-            };
+            const verifyRes = await fetch(`${API_URL}/api/payment/verify-payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: razorpayOrderId,
+                razorpay_payment_id: mockPaymentId,
+                razorpay_signature: mockSig,
+                orderId: orderId
+              })
+            });
 
-            addOrder(confirmedOrder);
-            clearCart();
+            const verifyData = await verifyRes.json();
+
+            if (verifyData.success) {
+              addOrder(verifyData.order);
+              clearCart();
+              setIsProcessing(false);
+              setCompletedOrder(verifyData.order);
+              setPaymentStatusState('SUCCESS');
+            } else {
+              throw new Error(verifyData.message);
+            }
+          } catch (err) {
             setIsProcessing(false);
-            setCompletedInvoice(confirmedOrder);
-          }, 1000);
-        }
-
-      } catch (err) {
-        console.error("Payment error:", err);
-        setIsProcessing(false);
-        setErrorMessage(err.message || "Could not connect to payment gateway.");
+            setPaymentStatusState('FAILED');
+            setErrorMessage("Verification error: " + err.message);
+          }
+        }, 1200);
       }
-    } else {
-      // 3. Cash on Delivery Flow
-      setTimeout(() => {
-        const codOrder = {
-          ...orderDetails,
-          paymentStatus: 'Pending COD',
-          status: 'Order Placed (COD)'
-        };
-        addOrder(codOrder);
-        clearCart();
-        setIsProcessing(false);
-        setCompletedInvoice(codOrder);
-      }, 600);
+
+    } catch (err) {
+      console.error("Payment initiation error:", err);
+      setIsProcessing(false);
+      setErrorMessage(err.message || "Could not connect to backend server.");
     }
   };
 
-  if (cart.length === 0 && !completedInvoice) {
+  // SUCCESS CONFIRMATION VIEW
+  if (paymentStatusState === 'SUCCESS' && completedOrder) {
     return (
-      <div className="min-h-screen bg-royal-greenDark py-20 px-4 text-center text-royal-ivory space-y-4">
-        <h2 className="font-serif-luxury text-3xl font-bold text-royal-gold">Your Shopping Bag is Empty</h2>
-        <p className="text-sm text-royal-goldMuted">Please add items to your cart before proceeding to checkout.</p>
-        <button onClick={() => router.push('/shop')} className="gold-btn px-6 py-3 rounded-xl text-xs font-bold">
-          Explore Bihar Sweets
-        </button>
+      <div className="min-h-screen bg-[#06241B] text-[#FAF7F2] py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto bg-[#0B3D2E] rounded-3xl border border-[#D4AF37]/40 shadow-2xl p-8 sm:p-12 space-y-8">
+          
+          <div className="text-center space-y-3 border-b border-[#D4AF37]/20 pb-8">
+            <div className="w-16 h-16 bg-emerald-950 border-2 border-emerald-500 rounded-full flex items-center justify-center text-emerald-400 mx-auto shadow-gold-glow">
+              <CheckCircle2 className="w-10 h-10" />
+            </div>
+            <span className="text-xs uppercase tracking-widest text-[#D4AF37] font-bold bg-[#D4AF37]/15 px-4 py-1.5 rounded-full border border-[#D4AF37]/30">
+              Payment Verified & Order Confirmed
+            </span>
+            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#D4AF37]">
+              Thank You for Your Order!
+            </h1>
+            <p className="text-xs sm:text-sm text-[#FAF7F2]/80 max-w-md mx-auto">
+              Your payment has been received successfully. You will receive an SMS confirmation on <strong className="text-[#D4AF37]">{completedOrder.customerPhone}</strong> shortly.
+            </p>
+          </div>
+
+          <div className="bg-[#06241B] p-6 rounded-2xl border border-[#D4AF37]/30 space-y-4 text-xs">
+            <div className="flex flex-wrap justify-between border-b border-[#D4AF37]/15 pb-3 gap-2">
+              <div>
+                <span className="text-[#D4AF37] font-semibold block">Order Reference ID</span>
+                <strong className="text-base text-white font-mono">{completedOrder.orderId}</strong>
+              </div>
+              <div className="text-right">
+                <span className="text-[#D4AF37] font-semibold block">Amount Paid</span>
+                <strong className="text-base text-emerald-400 font-mono">₹{completedOrder.totalAmount}</strong>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <span className="text-[#D4AF37] font-semibold block">Customer Name</span>
+                <span className="text-white font-bold">{completedOrder.customerName}</span>
+              </div>
+              <div>
+                <span className="text-[#D4AF37] font-semibold block">Payment Method</span>
+                <span className="text-emerald-400 font-bold">Razorpay Online (PAID)</span>
+              </div>
+              <div>
+                <span className="text-[#D4AF37] font-semibold block">Fulfillment Method</span>
+                <span className="text-white font-bold">🛍 STORE PICKUP ONLY</span>
+              </div>
+              <div>
+                <span className="text-[#D4AF37] font-semibold block">Store Pickup Location</span>
+                <span className="text-white">Main Road, City Center, Gaya, Bihar</span>
+              </div>
+              <div className="sm:col-span-2">
+                <span className="text-[#D4AF37] font-semibold block">Store Pickup Timings</span>
+                <span className="text-white">{CITY_DELIVERY_RULES.storeTimings}</span>
+              </div>
+            </div>
+
+            {/* Items Summary */}
+            <div className="border-t border-[#D4AF37]/20 pt-4 space-y-2">
+              <span className="font-bold text-[#D4AF37] block">Purchased Confections:</span>
+              {completedOrder.items.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center bg-[#0B3D2E] p-2.5 rounded-xl border border-[#D4AF37]/15">
+                  <span>{item.name} ({item.unit}) × {item.quantity}</span>
+                  <span className="font-bold text-[#D4AF37]">₹{item.price * item.quantity}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <button
+              onClick={() => window.print()}
+              className="flex-1 bg-[#06241B] border border-[#D4AF37]/40 hover:border-[#D4AF37] text-[#D4AF37] font-bold text-xs py-3.5 rounded-xl flex items-center justify-center space-x-2 transition-all cursor-pointer"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Print Order Receipt</span>
+            </button>
+            
+            <Link
+              href="/shop"
+              className="flex-1 gold-btn font-bold text-xs py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-gold-glow text-center"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span>Continue Shopping</span>
+            </Link>
+          </div>
+
+        </div>
       </div>
     );
   }
 
+  // FAILED PAYMENT VIEW
+  if (paymentStatusState === 'FAILED') {
+    return (
+      <div className="min-h-screen bg-[#06241B] text-[#FAF7F2] py-20 px-4 text-center flex items-center justify-center">
+        <div className="max-w-md w-full bg-[#0B3D2E] p-8 rounded-3xl border border-rose-500/50 space-y-6 shadow-2xl">
+          <div className="w-16 h-16 bg-rose-950 border-2 border-rose-500 rounded-full flex items-center justify-center text-rose-400 mx-auto">
+            <XCircle className="w-10 h-10" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="font-serif-luxury text-2xl font-bold text-rose-200">Payment Unsuccessful</h2>
+            <p className="text-xs text-[#FAF7F2]/80">
+              Your payment could not be completed or verified by our bank gateway. The order has <strong className="text-rose-400">NOT</strong> been confirmed.
+            </p>
+          </div>
+
+          {errorMessage && (
+            <div className="bg-rose-950/80 border border-rose-500/30 p-3 rounded-xl text-xs text-rose-200 text-left font-mono">
+              {errorMessage}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-3 pt-2">
+            <button
+              onClick={() => {
+                setPaymentStatusState(null);
+                setErrorMessage(null);
+              }}
+              className="gold-btn py-3.5 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-gold-glow cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Try Payment Again</span>
+            </button>
+
+            <Link
+              href="/shop"
+              className="bg-[#06241B] border border-[#D4AF37]/30 hover:border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl font-bold text-xs block"
+            >
+              Return to Cart / Menu
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // EMPTY BAG GUARD
+  if (cart.length === 0 && !completedOrder) {
+    return (
+      <div className="min-h-screen bg-[#06241B] py-20 px-4 text-center text-[#FAF7F2] space-y-4 flex flex-col justify-center items-center">
+        <ShoppingBag className="w-12 h-12 text-[#D4AF37]/50 mb-2" />
+        <h2 className="font-serif-luxury text-3xl font-bold text-[#D4AF37]">Your Shopping Bag is Empty</h2>
+        <p className="text-xs text-[#FAF7F2]/70 max-w-sm">Please add authentic Gaya sweets to your bag before checking out.</p>
+        <Link href="/shop" className="gold-btn px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
+          Explore Bihari Sweets
+        </Link>
+      </div>
+    );
+  }
+
+  // MAIN CHECKOUT FORM (STORE PICKUP ONLY)
   return (
-    <div className="min-h-screen bg-royal-greenDark text-royal-ivory py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#06241B] text-[#FAF7F2] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Header */}
-        <div className="border-b border-royal-gold/20 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* Page Title & Trust Header */}
+        <div className="border-b border-[#D4AF37]/20 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-widest text-royal-gold font-bold bg-royal-gold/10 px-3 py-1 rounded-full border border-royal-gold/20 mb-2">
+            <div className="inline-flex items-center space-x-2 text-xs uppercase tracking-widest text-[#D4AF37] font-bold bg-[#D4AF37]/10 px-3 py-1 rounded-full border border-[#D4AF37]/20 mb-2">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Razorpay Secured SSL Checkout</span>
+              <span>Razorpay Secured SSL • Backend Verified</span>
             </div>
-            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-royal-gold">
-              Complete Your Order
+            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#D4AF37]">
+              Store Pickup Checkout
             </h1>
           </div>
 
-          {!isAuthenticated && (
-            <div className="bg-amber-950/80 border border-amber-500/40 p-3 px-4 rounded-xl text-xs text-amber-200 flex items-center space-x-3">
-              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>Authentication Required before checkout.</span>
-              <button onClick={openAuthModal} className="gold-btn px-3 py-1 rounded-lg text-xs font-bold">
-                Log In
-              </button>
-            </div>
-          )}
+          <div className="flex items-center space-x-2 bg-[#0B3D2E] px-4 py-2 rounded-2xl border border-[#D4AF37]/30 text-xs text-[#FAF7F2]/80">
+            <Store className="w-4 h-4 text-[#D4AF37]" />
+            <span>Store Pickup Only • Zero Waiting Time</span>
+          </div>
         </div>
 
         {errorMessage && (
-          <div className="bg-rose-950/90 border border-rose-500/50 p-4 rounded-2xl text-xs text-rose-200 flex items-center justify-between animate-fade-in">
+          <div className="bg-rose-950/90 border border-rose-500/50 p-4 rounded-2xl text-xs text-rose-200 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               <span>{errorMessage}</span>
@@ -300,238 +409,152 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* Main Checkout Form */}
+          {/* Left Column: Form Details & Pickup Notice */}
           <div className="lg:col-span-8 space-y-6">
             
-            {/* Fulfillment Selector: Express Delivery vs Store Pickup */}
-            <div className="bg-royal-green p-6 rounded-3xl border border-royal-gold/30 space-y-4 shadow-luxury">
-              <h3 className="font-serif-luxury text-lg font-bold text-royal-gold">Select Delivery Method</h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setFulfillmentType('delivery')}
-                  className={`p-4 rounded-2xl border text-left flex items-start space-x-3 transition-all ${
-                    fulfillmentType === 'delivery' 
-                      ? 'border-royal-gold bg-royal-gold/15 shadow-gold-glow' 
-                      : 'border-royal-gold/20 bg-royal-greenDark hover:border-royal-gold/50'
-                  }`}
-                >
-                  <Truck className="w-5 h-5 text-royal-gold shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-royal-ivory">City Express Delivery</h4>
-                    <p className="text-xs text-royal-goldMuted/70">Delivered within city limits. Distance charges apply.</p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFulfillmentType('pickup')}
-                  className={`p-4 rounded-2xl border text-left flex items-start space-x-3 transition-all ${
-                    fulfillmentType === 'pickup' 
-                      ? 'border-royal-gold bg-royal-gold/15 shadow-gold-glow' 
-                      : 'border-royal-gold/20 bg-royal-greenDark hover:border-royal-gold/50'
-                  }`}
-                >
-                  <Store className="w-5 h-5 text-royal-gold shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-royal-ivory">Store Pickup (₹0 Charge)</h4>
-                    <p className="text-xs text-royal-goldMuted/70">Pick up fresh from store (7:00 AM – 10:00 PM).</p>
-                  </div>
-                </button>
+            {/* Store Pickup Notice Banner */}
+            <div className="bg-[#0B3D2E] p-6 rounded-3xl border border-[#D4AF37]/30 space-y-3 shadow-2xl">
+              <div className="flex items-center space-x-2 text-[#D4AF37] font-bold text-sm">
+                <Store className="w-5 h-5 text-[#D4AF37]" />
+                <span>Store Pickup Details</span>
               </div>
-
-              {/* Distance Slider for Delivery */}
-              {fulfillmentType === 'delivery' && (
-                <div className="bg-royal-greenDark p-4 rounded-2xl border border-royal-gold/20 space-y-2 pt-3">
-                  <div className="flex justify-between items-center text-xs font-bold">
-                    <span className="text-royal-gold">Estimated Delivery Distance</span>
-                    <span className="text-royal-ivory">{distanceKm} km from Kitchen</span>
-                  </div>
-                  <input 
-                    type="range" 
-                    min="1" 
-                    max={CITY_DELIVERY_RULES.maxCityRadiusKm || 15} 
-                    value={distanceKm} 
-                    onChange={(e) => setDistanceKm(Number(e.target.value))}
-                    className="w-full accent-royal-gold cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-royal-goldMuted/60">
-                    <span>1 km (Base Fee ₹40)</span>
-                    <span>Max City Radius {CITY_DELIVERY_RULES.maxCityRadiusKm || 15} km</span>
-                  </div>
+              <p className="text-xs text-[#FAF7F2]/80 font-light leading-relaxed">
+                Your sweets will be freshly packed and waiting for you at our flagship boutique store in Gaya:
+              </p>
+              <div className="bg-[#06241B] p-4 rounded-2xl border border-[#D4AF37]/20 text-xs text-[#FAF7F2] space-y-1 font-medium">
+                <div className="flex items-center space-x-2 text-[#D4AF37] font-bold">
+                  <MapPin className="w-4 h-4 shrink-0" />
+                  <span>VINDHYAWASINI TILKUT BHANDAR, Main Road, City Center, Gaya, Bihar</span>
                 </div>
-              )}
+                <div className="flex items-center space-x-2 text-[#FAF7F2]/70 pt-1">
+                  <Clock className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+                  <span>Operating Hours: {CITY_DELIVERY_RULES.storeTimings}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Address Form */}
-            {fulfillmentType === 'delivery' && (
-              <div className="bg-royal-green p-6 rounded-3xl border border-royal-gold/30 space-y-4 shadow-luxury">
-                <h3 className="font-serif-luxury text-lg font-bold text-royal-gold">Delivery Address Details</h3>
+            {/* Customer Details Form */}
+            <div className="bg-[#0B3D2E] p-6 sm:p-8 rounded-3xl border border-[#D4AF37]/30 space-y-5 shadow-2xl">
+              <h3 className="font-serif-luxury text-lg font-bold text-[#D4AF37]">Customer & Pickup Information</h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-royal-goldMuted mb-1 font-medium">Recipient Name</label>
-                    <input 
-                      type="text" 
-                      required
-                      placeholder="Full Name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full bg-royal-greenDark border border-royal-gold/30 rounded-xl px-4 py-2.5 text-xs text-royal-ivory focus:outline-none focus:border-royal-gold"
-                    />
-                  </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <label className="block text-[#FAF7F2]/80 mb-1.5 font-semibold">Recipient Full Name *</label>
+                  <input 
+                    type="text" 
+                    required
+                    placeholder="e.g. Rohan Verma"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full bg-[#06241B] border border-[#D4AF37]/30 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-xs text-royal-goldMuted mb-1 font-medium">Mobile Phone</label>
-                    <input 
-                      type="tel" 
-                      required
-                      placeholder="10-Digit Mobile"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full bg-royal-greenDark border border-royal-gold/30 rounded-xl px-4 py-2.5 text-xs text-royal-ivory focus:outline-none focus:border-royal-gold"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-[#FAF7F2]/80 mb-1.5 font-semibold">Mobile Phone (For SMS Updates) *</label>
+                  <input 
+                    type="tel" 
+                    required
+                    placeholder="10-Digit Mobile Number"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    className="w-full bg-[#06241B] border border-[#D4AF37]/30 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  />
+                </div>
 
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs text-royal-goldMuted mb-1 font-medium">Full Street Address</label>
-                    <input 
-                      type="text" 
-                      required
-                      placeholder="House/Flat No., Colony, Street"
-                      value={formData.address}
-                      onChange={(e) => setFormData({...formData, address: e.target.value})}
-                      className="w-full bg-royal-greenDark border border-royal-gold/30 rounded-xl px-4 py-2.5 text-xs text-royal-ivory focus:outline-none focus:border-royal-gold"
-                    />
-                  </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-[#FAF7F2]/80 mb-1.5 font-semibold">Email Address (Optional)</label>
+                  <input 
+                    type="email" 
+                    placeholder="patron@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full bg-[#06241B] border border-[#D4AF37]/30 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block text-xs text-royal-goldMuted mb-1 font-medium">Landmark (Optional)</label>
-                    <input 
-                      type="text" 
-                      placeholder="Near Temple / Chowk"
-                      value={formData.landmark}
-                      onChange={(e) => setFormData({...formData, landmark: e.target.value})}
-                      className="w-full bg-royal-greenDark border border-royal-gold/30 rounded-xl px-4 py-2.5 text-xs text-royal-ivory focus:outline-none focus:border-royal-gold"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-royal-goldMuted mb-1 font-medium">Pincode</label>
-                    <input 
-                      type="text" 
-                      required
-                      value={formData.pincode}
-                      onChange={(e) => setFormData({...formData, pincode: e.target.value})}
-                      className="w-full bg-royal-greenDark border border-royal-gold/30 rounded-xl px-4 py-2.5 text-xs text-royal-ivory focus:outline-none focus:border-royal-gold"
-                    />
-                  </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-[#FAF7F2]/80 mb-1.5 font-semibold">Special Pickup Instructions / Gift Note</label>
+                  <textarea 
+                    rows={2}
+                    placeholder="e.g. Please pack in brass wedding box for 5:00 PM pickup"
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    className="w-full bg-[#06241B] border border-[#D4AF37]/30 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#D4AF37]"
+                  />
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Payment Method Selector */}
-            <div className="bg-royal-green p-6 rounded-3xl border border-royal-gold/30 space-y-4 shadow-luxury">
-              <h3 className="font-serif-luxury text-lg font-bold text-royal-gold">Payment Gateway Architecture</h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('razorpay')}
-                  className={`p-4 rounded-2xl border text-left flex items-start space-x-3 transition-all ${
-                    paymentMethod === 'razorpay' 
-                      ? 'border-royal-gold bg-royal-gold/15 shadow-gold-glow' 
-                      : 'border-royal-gold/20 bg-royal-greenDark hover:border-royal-gold/50'
-                  }`}
-                >
-                  <CreditCard className="w-5 h-5 text-royal-gold shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-royal-ivory">Razorpay Gateway (Recommended)</h4>
-                    <p className="text-xs text-royal-goldMuted/70">UPI (GPay/PhonePe), Cards, NetBanking, HMAC Verified</p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('cod')}
-                  className={`p-4 rounded-2xl border text-left flex items-start space-x-3 transition-all ${
-                    paymentMethod === 'cod' 
-                      ? 'border-royal-gold bg-royal-gold/15 shadow-gold-glow' 
-                      : 'border-royal-gold/20 bg-royal-greenDark hover:border-royal-gold/50'
-                  }`}
-                >
-                  <Banknote className="w-5 h-5 text-royal-gold shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-bold text-sm text-royal-ivory">Cash on Delivery (COD)</h4>
-                    <p className="text-xs text-royal-goldMuted/70">Pay cash upon express delivery or store pickup</p>
-                  </div>
-                </button>
-              </div>
-
-              <div className="text-[11px] text-royal-goldMuted/70 bg-royal-greenDark p-3 rounded-xl border border-royal-gold/10 flex items-center space-x-2">
-                <Lock className="w-3.5 h-3.5 text-royal-gold shrink-0" />
-                <span>Zero Card/CVV Storage in DB • AES-256 SSL Encrypted • Direct Bank Settlement</span>
+            {/* Payment Security Assurance Box */}
+            <div className="bg-[#0B3D2E]/60 p-4 rounded-2xl border border-[#D4AF37]/20 flex items-center space-x-3 text-xs text-[#FAF7F2]/70">
+              <Lock className="w-5 h-5 text-[#D4AF37] shrink-0" />
+              <div>
+                <span className="font-bold text-[#D4AF37] block">🔒 100% Encrypted & HMAC Verified</span>
+                <span>Payment credentials are processed directly by Razorpay's PCI-DSS Bank Gateway. No card numbers or CVVs are ever stored.</span>
               </div>
             </div>
 
           </div>
 
-          {/* Sidebar Order Summary */}
+          {/* Right Column: Order Summary & Pay CTA */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-royal-green p-6 rounded-3xl border border-royal-gold/30 shadow-luxury space-y-6 sticky top-28">
-              <h3 className="font-serif-luxury text-xl font-bold text-royal-gold">Order Summary</h3>
+            <div className="bg-[#0B3D2E] p-6 rounded-3xl border border-[#D4AF37]/30 shadow-2xl space-y-6 sticky top-28">
+              <h3 className="font-serif-luxury text-xl font-bold text-[#D4AF37]">Order Summary</h3>
 
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+              {/* Items List */}
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                 {cart.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-xs border-b border-royal-gold/15 pb-2">
+                  <div key={item.id} className="flex justify-between items-center text-xs border-b border-[#D4AF37]/15 pb-2.5">
                     <div>
-                      <h5 className="font-bold text-royal-ivory">{item.name}</h5>
-                      <span className="text-[10px] text-royal-goldMuted">{item.quantity} x ₹{item.price}</span>
+                      <h5 className="font-bold text-white">{item.name}</h5>
+                      <span className="text-[10px] text-[#D4AF37]">{item.quantity} × ₹{item.price} ({item.unit})</span>
                     </div>
-                    <span className="font-bold text-royal-gold">₹{item.price * item.quantity}</span>
+                    <span className="font-bold text-[#D4AF37]">₹{item.price * item.quantity}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-2 text-xs text-royal-goldMuted border-t border-royal-gold/20 pt-4">
+              {/* Fee Breakdown */}
+              <div className="space-y-2 text-xs text-[#FAF7F2]/80 border-t border-[#D4AF37]/20 pt-4">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-royal-ivory">₹{subtotal}</span>
+                  <span className="font-semibold text-white">₹{subtotal}</span>
                 </div>
                 
                 {discount > 0 && (
                   <div className="flex justify-between text-emerald-400">
-                    <span>Discount</span>
+                    <span>Festival Coupon Discount</span>
                     <span>-₹{discount}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between">
-                  <span>Delivery Charge</span>
-                  <span>{deliveryFee === 0 ? <strong className="text-emerald-400">FREE</strong> : `₹${deliveryFee}`}</span>
+                  <span>Store Pickup Fee</span>
+                  <span className="font-bold text-emerald-400">₹0 FREE</span>
                 </div>
 
-                <div className="border-t border-royal-gold/20 pt-3 flex justify-between text-base font-bold text-royal-gold">
-                  <span>Grand Total</span>
-                  <span className="text-xl">₹{grandTotal}</span>
+                <div className="border-t border-[#D4AF37]/20 pt-3 flex justify-between items-baseline font-bold text-[#D4AF37]">
+                  <span className="text-sm">Grand Total</span>
+                  <span className="text-2xl font-serif-luxury">₹{grandTotal}</span>
                 </div>
               </div>
 
+              {/* Primary Secure Payment CTA Button */}
               <button
                 disabled={isProcessing}
-                onClick={handlePlaceOrder}
-                className="w-full gold-btn py-4 rounded-2xl font-bold text-sm shadow-gold-glow flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+                onClick={handleInitiatePayment}
+                className="w-full gold-btn py-4 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-gold-glow flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
               >
                 {isProcessing ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-royal-green border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#0B3D2E] border-t-transparent rounded-full animate-spin" />
                     <span>Connecting to Razorpay...</span>
                   </>
                 ) : (
                   <>
                     <Lock className="w-4 h-4" />
-                    <span>{isAuthenticated ? `Pay ₹${grandTotal} & Place Order` : "Log In to Place Order"}</span>
+                    <span>Proceed to Secure Payment (₹{grandTotal})</span>
                   </>
                 )}
               </button>
@@ -541,91 +564,6 @@ export default function CheckoutPage() {
         </div>
 
       </div>
-
-      {/* Invoice Confirmation Modal */}
-      {completedInvoice && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="relative max-w-2xl w-full bg-royal-green p-8 rounded-3xl border border-royal-gold shadow-2xl space-y-6 text-royal-ivory">
-            
-            <div className="text-center space-y-2 border-b border-royal-gold/20 pb-6">
-              <div className="w-14 h-14 bg-emerald-950 border border-emerald-500/50 rounded-full flex items-center justify-center text-emerald-400 mx-auto shadow-gold-glow">
-                <CheckCircle2 className="w-8 h-8" />
-              </div>
-              <span className="text-xs uppercase tracking-widest text-royal-gold font-bold bg-royal-gold/15 px-3 py-1 rounded-full border border-royal-gold/30">
-                Official Digital Invoice & Order Receipt
-              </span>
-              <h2 className="font-serif-luxury text-2xl font-bold text-royal-gold">
-                Order Confirmed Successfully!
-              </h2>
-              <p className="text-xs text-royal-goldMuted">
-                Thank you for patronizing VINDHYAWASINI TILKUT BHANDAR. Your order receipt is printed below.
-              </p>
-            </div>
-
-            <div className="bg-royal-greenDark p-6 rounded-2xl border border-royal-gold/30 space-y-4 text-xs font-mono">
-              <div className="flex justify-between border-b border-royal-gold/15 pb-2">
-                <span>Order Reference: <strong className="text-royal-gold">{completedInvoice.id}</strong></span>
-                <span>Date: {completedInvoice.date}</span>
-              </div>
-
-              {completedInvoice.paymentId && (
-                <div className="flex justify-between text-emerald-400 border-b border-royal-gold/15 pb-2">
-                  <span>Razorpay Payment ID:</span>
-                  <strong>{completedInvoice.paymentId}</strong>
-                </div>
-              )}
-
-              <div className="space-y-1.5">
-                <span className="font-bold text-royal-gold font-sans block">Order Items:</span>
-                {completedInvoice.items.map((it, idx) => (
-                  <div key={idx} className="flex justify-between font-sans">
-                    <span>{it.name} ({it.quantity}x)</span>
-                    <span className="font-bold">₹{it.price * it.quantity}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="border-t border-royal-gold/20 pt-3 space-y-1 font-sans">
-                <div className="flex justify-between">
-                  <span>Delivery Method:</span>
-                  <span>{completedInvoice.fulfillmentType === 'pickup' ? 'Store Pickup' : 'City Express Delivery'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Payment Gateway Status:</span>
-                  <span className="text-emerald-400 font-bold">PAID (HMAC Verified)</span>
-                </div>
-                <div className="flex justify-between text-sm font-bold text-royal-gold pt-2 border-t border-royal-gold/15">
-                  <span>Grand Total Paid:</span>
-                  <span>₹{completedInvoice.grandTotal}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => window.print()}
-                className="flex-1 bg-royal-greenDark border border-royal-gold/40 hover:border-royal-gold text-royal-gold font-bold text-xs py-3 rounded-xl flex items-center justify-center space-x-2"
-              >
-                <Printer className="w-4 h-4" />
-                <span>Print Invoice Receipt</span>
-              </button>
-              
-              <button
-                onClick={() => {
-                  setCompletedInvoice(null);
-                  router.push('/dashboard');
-                }}
-                className="flex-1 gold-btn font-bold text-xs py-3 rounded-xl flex items-center justify-center space-x-2 shadow-gold-glow"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Go to Customer Dashboard</span>
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
