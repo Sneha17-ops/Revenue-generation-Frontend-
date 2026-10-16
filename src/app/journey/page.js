@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronDown,
   Sparkles, 
@@ -12,46 +12,25 @@ import {
   ZoomIn, 
   ZoomOut, 
   Maximize2,
-  Play,
-  Pause,
-  Heart,
-  ShieldCheck,
-  Award,
   Star,
-  Quote,
   ArrowRight,
-  Clock,
   MapPin,
   Users,
+  Award,
+  ShieldCheck,
   CheckCircle2
 } from 'lucide-react';
 import HeritageBackground from '../../components/ui/HeritageBackground';
 import CustomCursor from '../../components/ui/CustomCursor';
 import GradualBlur from '../../components/ui/GradualBlur';
 import AboutOwnerSection from '../../components/legacy/AboutOwnerSection';
+import LegacyVideoSection from '../../components/home/LegacyVideoSection';
 
 export default function OurLegacyPage() {
-  const videoRef = useRef(null);
   const aboutRef = useRef(null);
   const galleryRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
-  // Automatically scroll down to Section 2 (About section) after the 8.5 second video finishes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (aboutRef.current) {
-        aboutRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 8500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const scrollToAbout = () => {
-    if (aboutRef.current) {
-      aboutRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   // Gallery items using local high-res assets
   const galleryItems = [
@@ -65,7 +44,7 @@ export default function OurLegacyPage() {
     {
       id: 'gallery-2',
       title: 'Royal Brand Heritage Emblem',
-      subtitle: '35 Years of trusted confectionery excellence',
+      subtitle: '30+ Years of trusted confectionery excellence',
       url: '/assets/MP8.jpeg',
       category: 'Brand Heritage'
     },
@@ -118,20 +97,9 @@ export default function OurLegacyPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIndex, galleryItems.length]);
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const scrollToGallery = () => {
-    if (galleryRef.current) {
-      galleryRef.current.scrollIntoView({ behavior: 'smooth' });
+  const scrollToAbout = () => {
+    if (aboutRef.current) {
+      aboutRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -147,59 +115,20 @@ export default function OurLegacyPage() {
       {/* ========================================================================= */}
       {/* SECTION 1 – HERO VIDEO BANNER (Ultra-Clean Luxury Brand Film)              */}
       {/* ========================================================================= */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pt-6 pb-6 max-w-7xl mx-auto flex flex-col items-center z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 25 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full h-[65vh] sm:h-[75vh] lg:h-[82vh] rounded-[20px] overflow-hidden shadow-2xl border-2 border-[#D4AF37]/30 group"
-          data-cursor="card"
-        >
-          {/* Autoplay Cinematic Heritage Video */}
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            onEnded={scrollToAbout}
-            poster="/assets/MP6.jpeg"
-            className="w-full h-full object-cover filter brightness-[0.96] contrast-[1.05]"
-          >
-            <source src="/assets/MP7.mp4" type="video/mp4" />
-            <img src="/assets/MP6.jpeg" alt="VINDHYAWASINI TILKUT BHANDAR Heritage" className="w-full h-full object-cover" />
-          </video>
+      <section className="relative px-2 sm:px-6 lg:px-8 pt-4 pb-6 max-w-7xl mx-auto flex flex-col items-center z-10">
+        <LegacyVideoSection 
+          title="Vindhyawasini Tilkut Bhandar — Craft & Heritage Film"
+          subtitle="Preserving Gaya's 30+ year tradition of pure A2 Desi Ghee & hand-pounded jaggery tilkut"
+          showTitle={true}
+        />
 
-          {/* Subtle Dark Luxury Gradient Overlay for Title & Readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#06241B]/60 via-transparent to-[#06241B]/70 pointer-events-none" />
-
-          {/* Floating Top Badge (Top-Left) */}
-          <div className="absolute top-6 left-6 z-10">
-            <div className="inline-flex items-center space-x-2 bg-[#06241B]/75 backdrop-blur-md text-[#D4AF37] px-4 py-1.5 rounded-full border border-[#D4AF37]/40 shadow-gold-glow text-xs font-bold uppercase tracking-widest">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Legacy Since 1995</span>
-            </div>
-          </div>
-
-          {/* Minimal Circular Play/Pause Control (Bottom-Right Corner) */}
-          <button
-            onClick={togglePlay}
-            data-cursor="pointer"
-            className="absolute bottom-5 right-5 sm:bottom-6 sm:right-6 z-20 w-10 h-10 rounded-full bg-[#06241B]/80 hover:bg-[#D4AF37] text-[#D4AF37] hover:text-[#06241B] border border-[#D4AF37]/40 backdrop-blur-md flex items-center justify-center transition-all shadow-lg hover:scale-110"
-            title={isPlaying ? "Pause Video" : "Play Video"}
-          >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-[#D4AF37] translate-x-0.5" />}
-          </button>
-        </motion.div>
-
-        {/* Subtle Animated Cue at the Bottom */}
+        {/* Scroll Cue at Bottom */}
         <motion.button
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
           onClick={scrollToAbout}
-          data-cursor="pointer"
-          className="mt-6 flex flex-col items-center text-[#D4AF37] hover:text-[#0B3D2E] transition-colors group cursor-pointer"
+          className="mt-2 flex flex-col items-center text-[#D4AF37] hover:text-[#0B3D2E] transition-colors group cursor-pointer"
         >
           <span className="text-[11px] uppercase tracking-[0.25em] font-semibold mb-1">
             ↓ Scroll to Discover Our Legacy
@@ -214,9 +143,7 @@ export default function OurLegacyPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* ========================================================================= */}
-      {/* ========================================================================= */}
-      {/* SECTION 2 – ABOUT THE OWNER (SHRI UMESH MALAKAR) — EXCLUSIVE TO LEGACY PAGE */}
+      {/* SECTION 2 – ABOUT THE OWNER (SHRI UMESH MALAKAR)                          */}
       {/* ========================================================================= */}
       <div ref={aboutRef}>
         <AboutOwnerSection />
@@ -225,7 +152,7 @@ export default function OurLegacyPage() {
       {/* ========================================================================= */}
       {/* SECTION 3 – HERITAGE GALLERY ("A JOURNEY THROUGH TIME")                    */}
       {/* ========================================================================= */}
-      <section ref={galleryRef} className="relative py-20 sm:py-28 bg-[#F5EFE6]/80 backdrop-blur-sm border-y border-[#D4AF37]/20 z-10">
+      <section ref={galleryRef} className="relative py-20 sm:py-28 bg-[#F6F0E6]/80 backdrop-blur-sm border-y border-[#D4AF37]/20 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -236,7 +163,7 @@ export default function OurLegacyPage() {
               Moments of Craftsmanship & Celebration
             </h2>
             <p className="text-xs sm:text-sm text-[#0B3D2E]/75">
-              Explore 35 years of artisanal devotion, karigar handiwork, and traditional sweet-making heritage.
+              Explore 30+ years of artisanal devotion, karigar handiwork, and traditional sweet-making heritage.
             </p>
           </div>
 
@@ -250,7 +177,6 @@ export default function OurLegacyPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: idx * 0.1 }}
                 onClick={() => setLightboxIndex(idx)}
-                data-cursor="view"
                 className="relative rounded-[24px] overflow-hidden border border-[#D4AF37]/30 shadow-luxury group cursor-pointer break-inside-avoid bg-[#06241B]"
               >
                 {/* Image Container with Hover Zoom */}
@@ -294,7 +220,7 @@ export default function OurLegacyPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 4 – CUSTOMER RATINGS PLACEHOLDER ("LOVED BY GENERATIONS")          */}
+      {/* SECTION 4 – CUSTOMER RATINGS ("LOVED BY GENERATIONS")                      */}
       {/* ========================================================================= */}
       <section className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16 z-10">
         
@@ -334,7 +260,7 @@ export default function OurLegacyPage() {
           </div>
         </motion.div>
 
-        {/* Testimonials Placeholder Cards Grid */}
+        {/* Testimonials Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Review Card 1 */}
@@ -408,7 +334,7 @@ export default function OurLegacyPage() {
                 ))}
               </div>
               <p className="text-xs sm:text-sm text-[#0B3D2E]/85 italic leading-relaxed">
-                "Sugar-Free Anjeer Barfi and Gud Tilkut are staple winter treats for our entire family. 35 years of uncompromised quality!"
+                "Sugar-Free Anjeer Barfi and Gud Tilkut are staple winter treats for our entire family. 30+ years of uncompromised quality!"
               </p>
             </div>
 

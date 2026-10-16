@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Crown, Sparkles, Heart, ShieldCheck, ArrowRight } from 'lucide-react';
 import GradualBlur from '../ui/GradualBlur';
 import BlurText from '../ui/BlurText';
+import LegacyVideoSection from './LegacyVideoSection';
 
 export const HeritageStory = () => {
   const pillarItems = [
@@ -47,11 +48,19 @@ export const HeritageStory = () => {
         <line x1="60" y1="80" x2="100" y2="80" strokeWidth="0.5" />
       </svg>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 space-y-16">
+        
+        {/* Brand Legacy Film Video Banner */}
+        <LegacyVideoSection 
+          title="Vindhyawasini Tilkut Bhandar — Artisanal Craft Film"
+          subtitle="Watch our traditional karigars hand-pounding white sesame and organic jaggery in Gaya"
+          showTitle={true}
+        />
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
           {/* ========================================================================= */}
-          {/* LEFT COLUMN: Owner's Original Photograph (Editorial Frame & Depth)       */}
+          {/* LEFT COLUMN: Owner's Photograph                                           */}
           {/* ========================================================================= */}
           <motion.div 
             initial={{ opacity: 0.9, y: 15 }}
@@ -72,7 +81,7 @@ export const HeritageStory = () => {
                 className="relative bg-[#FFFFFF] p-3 sm:p-4 rounded-[30px] sm:rounded-[36px] border-2 border-[#D4AF37]/50 shadow-[0_25px_60px_-15px_rgba(11,61,46,0.16)] group transition-all duration-500"
               >
                 
-                {/* Photo Framing Container - Uncropped portrait */}
+                {/* Photo Framing Container */}
                 <div className="relative h-[380px] sm:h-[460px] lg:h-[500px] w-full rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#FAF7F2]">
                   <img 
                     src="/assets/Owner.png" 
@@ -126,7 +135,7 @@ export const HeritageStory = () => {
               </div>
             </div>
 
-            {/* 2. Main Heading with BlurText Text Animation */}
+            {/* 2. Main Heading */}
             <div className="space-y-1">
               <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0B3D2E] leading-[1.12]">
                 <BlurText 
@@ -202,7 +211,7 @@ export const HeritageStory = () => {
         </div>
       </div>
 
-      {/* React Bits GradualBlur Component (Bottom Section Edge Transition) */}
+      {/* Edge Transition */}
       <GradualBlur
         target="parent"
         position="bottom"

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,37 +6,26 @@
 
 @layer base {
   :root {
-    --bg-cream: #FAF7F2;
-    --text-forest: #0B3D2E;
+    --bg-ivory: #FAF7F2;
+    --text-green: #0B3D2E;
     --gold-primary: #D4AF37;
     --gold-muted: #F3E5AB;
-    --gold-dark: #997D20;
-    --forest-dark: #06241B;
+    --maroon-accent: #4A0E17;
   }
 
   body {
     background-color: #FAF7F2;
     color: #0B3D2E;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, .font-serif-luxury, .font-cinzel {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+  h1, h2, h3, .font-serif-luxury {
+    font-family: 'Playfair Display', serif;
   }
 
-  button, .gold-btn, .forest-btn {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-  }
-
-  nav, .nav-link {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.04em;
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
   }
 }
 
@@ -48,59 +37,54 @@
   border-bottom: 1px solid rgba(212, 175, 55, 0.25);
 }
 
-.luxury-card {
-  background: #FFFFFF;
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(212, 175, 55, 0.35);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px -15px rgba(11, 61, 46, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 15px 35px -10px rgba(11, 61, 46, 0.08);
 }
 
-.luxury-card:hover {
-  border-color: rgba(212, 175, 55, 0.7);
-  box-shadow: 0 30px 60px -12px rgba(212, 175, 55, 0.25);
-  transform: translateY(-3px);
+.glass-card-dark {
+  background: rgba(11, 61, 46, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
 }
 
 /* Gradients & Shimmer */
 .gold-text-gradient {
-  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #997D20 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gold-shimmer-text {
-  background: linear-gradient(90deg, #997D20 0%, #D4AF37 25%, #FFF8DC 50%, #D4AF37 75%, #997D20 100%);
+  background: linear-gradient(135deg, #F7E7B4 0%, #D4AF37 45%, #AA820A 75%, #F3E5AB 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: goldShimmer 4s ease-in-out infinite;
+  animation: goldShimmer 6s ease infinite;
 }
 
 @keyframes goldShimmer {
-  0% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-  100% { background-position: 0% center; }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.forest-text-gradient {
-  background: linear-gradient(135deg, #135440 0%, #0B3D2E 60%, #06241B 100%);
+.emerald-text-gradient {
+  background: linear-gradient(135deg, #154D3B 0%, #0B3D2E 70%, #06241B 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-btn {
-  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #997D20 100%);
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89222 100%);
   color: #0B3D2E;
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
 }
 
 .gold-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
-  background: linear-gradient(135deg, #FFF8DC 0%, #E5C158 50%, #B39226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.55);
 }
 
 .forest-btn {
@@ -109,14 +93,14 @@
   border: 1px solid rgba(212, 175, 55, 0.4);
   font-weight: 700;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(11, 61, 46, 0.2);
+  box-shadow: 0 4px 20px rgba(11, 61, 46, 0.25);
 }
 
 .forest-btn:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px);
   background: #06241B;
   border-color: #D4AF37;
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.35);
 }
 
 /* Custom Smooth Scrollbar */
